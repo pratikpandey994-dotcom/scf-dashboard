@@ -15,190 +15,22 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# ══════════════════════════════════════════════════════════════════════════════
-# DESIGN SYSTEM
-# ══════════════════════════════════════════════════════════════════════════════
+# THEME_CSS — only what provably works in Streamlit 1.57
+# Background + layout via config.toml. CSS here handles padding, fonts, scrollbar.
 THEME_CSS = """
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ── Tokens ───────────────────────────────────────────────── */
-:root{
-  --bg:#0d1117; --bg-card:#161b22; --bg-hover:#1c2430; --bg-input:#0d1117;
-  --border:#21262d; --border-hi:#30363d;
-  --amber:#f59e0b; --green:#10b981; --red:#ef4444; --orange:#f97316; --blue:#6366f1;
-  --t1:#e6edf3; --t2:#8b949e; --t3:#484f58;
-  --mono:'IBM Plex Mono',monospace; --sans:'IBM Plex Sans',sans-serif; --r:6px;
-}
-
-/* ── Base ─────────────────────────────────────────────────── */
-html,body{background:var(--bg)!important;font-family:var(--sans)!important;color:var(--t1)!important}
-.stApp{background:var(--bg)!important}
-.stApp > header{background:transparent!important;border-bottom:none!important}
-section[data-testid="stSidebar"]{background:var(--bg-card)!important;border-right:1px solid var(--border)!important}
-.block-container{padding:1.2rem 2rem 3rem!important;max-width:1560px!important}
-/* Streamlit 1.57 wraps content in stMainBlockContainer */
-[data-testid="stMainBlockContainer"]{padding:1.2rem 2rem 3rem!important;max-width:1560px!important}
-p,span,div,label{font-family:var(--sans)!important}
-h1,h2,h3{font-family:var(--sans)!important;color:var(--t1)!important}
-a{color:var(--amber)!important}
-
-/* ── Tabs ─────────────────────────────────────────────────── */
-[data-testid="stTabs"] [role="tablist"]{
-  background:var(--bg-card);border:1px solid var(--border);
-  border-radius:var(--r);padding:3px;gap:2px;flex-wrap:wrap
-}
-[data-testid="stTabs"] button[role="tab"]{
-  font-family:var(--sans)!important;font-size:.7rem!important;
-  font-weight:600!important;letter-spacing:.04em;
-  color:var(--t2)!important;border-radius:4px!important;
-  padding:5px 12px!important;border:none!important;
-  background:transparent!important;transition:all .15s;white-space:nowrap
-}
-[data-testid="stTabs"] button[role="tab"]:hover{
-  color:var(--t1)!important;background:var(--bg-hover)!important
-}
-[data-testid="stTabs"] button[role="tab"][aria-selected="true"]{
-  background:var(--amber)!important;color:#0d1117!important
-}
-[data-testid="stTabs"] [role="tabpanel"]{padding-top:1.2rem!important}
-/* Hide Streamlit's default tab underline */
-[data-testid="stTabs"] [role="tablist"]::after{display:none!important}
-[data-testid="stTabs"] button[role="tab"] p{
-  font-family:var(--sans)!important;font-size:.7rem!important;font-weight:600!important
-}
-
-/* ── st.metric ────────────────────────────────────────────── */
-[data-testid="stMetric"]{
-  background:var(--bg-card);border:1px solid var(--border);
-  border-radius:var(--r);padding:14px 16px!important
-}
-[data-testid="stMetricLabel"] p,
-[data-testid="stMetricLabel"] > div > div{
-  font-family:var(--sans)!important;font-size:.62rem!important;
-  font-weight:700!important;letter-spacing:.09em;
-  text-transform:uppercase;color:var(--t2)!important
-}
-[data-testid="stMetricValue"] > div{
-  font-family:var(--mono)!important;font-size:1.35rem!important;
-  font-weight:600!important;color:var(--amber)!important;line-height:1.2
-}
-[data-testid="stMetricDelta"] svg{display:none!important}
-[data-testid="stMetricDelta"] > div{
-  font-family:var(--mono)!important;font-size:.68rem!important;color:var(--t3)!important
-}
-
-/* ── Dataframe ────────────────────────────────────────────── */
-[data-testid="stDataFrame"]{
-  border:1px solid var(--border)!important;border-radius:var(--r)!important;overflow:hidden
-}
-[data-testid="stDataFrame"] iframe,
-.stDataFrame iframe{background:var(--bg-card)!important}
-
-/* ── Selectbox ────────────────────────────────────────────── */
-[data-testid="stSelectbox"] > div > div{
-  background:var(--bg-card)!important;border:1px solid var(--border)!important;
-  border-radius:var(--r)!important;color:var(--t1)!important
-}
-[data-testid="stSelectbox"] svg{color:var(--t2)!important}
-
-/* ── Number input ─────────────────────────────────────────── */
-[data-testid="stNumberInput"] > div{
-  background:var(--bg-card)!important;border:1px solid var(--border)!important;border-radius:var(--r)!important
-}
-[data-testid="stNumberInput"] input{background:transparent!important;color:var(--t1)!important;font-family:var(--mono)!important}
-
-/* ── Radio ────────────────────────────────────────────────── */
-[data-testid="stRadio"] > label{
-  font-family:var(--sans)!important;font-size:.62rem!important;
-  font-weight:700!important;letter-spacing:.07em;text-transform:uppercase;color:var(--t3)!important
-}
-[data-testid="stRadio"] div[role="radiogroup"]{gap:4px!important}
-[data-testid="stRadio"] label[data-baseweb="radio"] span:first-child{
-  background:var(--bg-card)!important;border-color:var(--border-hi)!important
-}
-[data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"] span:first-child{
-  border-color:var(--amber)!important;background:var(--amber)!important
-}
-[data-testid="stRadio"] label[data-baseweb="radio"] div{
-  font-family:var(--sans)!important;font-size:.75rem!important;color:var(--t2)!important
-}
-[data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"] div{color:var(--amber)!important}
-
-/* ── Buttons ──────────────────────────────────────────────── */
-button[data-testid="stBaseButton-secondary"]{
-  font-family:var(--sans)!important;font-weight:600!important;font-size:.74rem!important;
-  letter-spacing:.04em;border-radius:var(--r)!important;transition:all .15s!important;
-  border:1px solid var(--border)!important;background:var(--bg-card)!important;color:var(--t2)!important
-}
-button[data-testid="stBaseButton-secondary"]:hover{
-  border-color:var(--amber)!important;color:var(--amber)!important;background:var(--bg-hover)!important
-}
-button[data-testid="stBaseButton-primary"]{
-  font-family:var(--sans)!important;font-weight:700!important;font-size:.78rem!important;
-  letter-spacing:.04em;border-radius:var(--r)!important;
-  background:var(--amber)!important;border-color:var(--amber)!important;color:#0d1117!important
-}
-button[data-testid="stBaseButton-primary"]:hover{background:#fbbf24!important;border-color:#fbbf24!important}
-button[data-testid="stBaseButton-primary"]:disabled{background:var(--t3)!important;border-color:var(--t3)!important;color:#0d1117!important;cursor:not-allowed!important}
-
-/* ── Expander ─────────────────────────────────────────────── */
-[data-testid="stExpander"]{
-  background:var(--bg-card)!important;border:1px solid var(--border)!important;
-  border-radius:var(--r)!important;margin-bottom:6px!important
-}
-[data-testid="stExpander"] details summary{
-  font-family:var(--sans)!important;font-size:.74rem!important;
-  font-weight:600!important;color:var(--t2)!important;padding:10px 14px!important
-}
-[data-testid="stExpander"] details summary:hover{
-  color:var(--t1)!important;background:rgba(255,255,255,.03)!important
-}
-[data-testid="stExpander"] details[open] summary{color:var(--t1)!important}
-[data-testid="stExpanderDetails"]{padding:2px 14px 12px!important}
-
-/* ── File uploader ────────────────────────────────────────── */
-[data-testid="stFileUploaderDropzone"]{
-  background:var(--bg-card)!important;border:1.5px dashed var(--border-hi)!important;
-  border-radius:var(--r)!important;transition:border-color .2s!important
-}
-[data-testid="stFileUploaderDropzone"]:hover{border-color:var(--amber)!important}
-[data-testid="stFileUploaderDropzone"] > div{padding:12px!important}
-[data-testid="stFileUploaderDropzone"] span{font-family:var(--sans)!important;font-size:.76rem!important;color:var(--t2)!important}
-[data-testid="stFileUploaderDropzone"] small{font-size:.62rem!important;color:var(--t3)!important}
-[data-testid="stFileUploader"] label p{
-  font-family:var(--sans)!important;font-size:.68rem!important;
-  font-weight:700!important;letter-spacing:.08em;text-transform:uppercase;color:var(--t2)!important
-}
-/* Uploaded file chip */
-[data-testid="stFileUploader"] [data-testid="stFileUploadDeleteBtn"]{color:var(--red)!important}
-[data-testid="stUploadedFile"]{background:var(--bg-hover)!important;border:1px solid var(--border)!important;border-radius:4px!important}
-[data-testid="stUploadedFileName"]{color:var(--green)!important;font-family:var(--mono)!important;font-size:.72rem!important}
-
-/* ── Date input ───────────────────────────────────────────── */
-[data-testid="stDateInput"] input{
-  background:var(--bg-card)!important;border:1px solid var(--border)!important;
-  border-radius:var(--r)!important;color:var(--amber)!important;font-family:var(--mono)!important;font-size:.85rem!important
-}
-[data-testid="stDateInput"] label p{
-  font-family:var(--sans)!important;font-size:.68rem!important;
-  font-weight:700!important;letter-spacing:.08em;text-transform:uppercase;color:var(--t2)!important
-}
-
-/* ── Alerts ───────────────────────────────────────────────── */
-[data-testid="stAlert"]{border-radius:var(--r)!important;font-size:.8rem!important;font-family:var(--sans)!important}
-
-/* ── Divider ──────────────────────────────────────────────── */
-[data-testid="stMarkdown"] hr{border:none!important;border-top:1px solid var(--border)!important;margin:.8rem 0!important}
-
-/* ── Spinner ──────────────────────────────────────────────── */
-[data-testid="stSpinner"] > div{border-top-color:var(--amber)!important}
-
-/* ── Scrollbar ────────────────────────────────────────────── */
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--border-hi);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:var(--t3)}
+/* Layout & spacing */
+.block-container{padding:1rem 2rem 3rem!important;max-width:1560px!important}
+[data-testid="stMainBlockContainer"]{padding:1rem 2rem 3rem!important;max-width:1560px!important}
+header[data-testid="stHeader"]{background:transparent!important}
+/* Thin scrollbar */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:#0d1117}
+::-webkit-scrollbar-thumb{background:#30363d;border-radius:2px}
+/* Reduce gap between st.columns */
+[data-testid="column"]{padding:0 6px!important}
 </style>
 """
 
@@ -454,6 +286,139 @@ def process_data(v1, mh, v2, obhist, obcurr, today_ts):
     return pod, v2p, ob_pivot
 
 # ══════════════════════════════════════════════════════════════════════════════
+# DEMO DATA GENERATOR
+# ══════════════════════════════════════════════════════════════════════════════
+def make_demo_data(today_ts):
+    """Generate realistic synthetic SCF portfolio data."""
+    rng = np.random.default_rng(42)
+
+    companies = [
+        "Apex Foods LLC","Blue Ridge Trading","Coastal Supply Co","Delta Imports Inc","Eagle Distributors",
+        "Frontier Goods Corp","Global Harvest Ltd","Harbor Freight Solutions","Inland Fresh Co","Junction Foods",
+        "Keystone Provisions","Liberty Commodities","Meridian Trade Co","Northgate Supplies","Orion Foods Inc",
+        "Pacific Rim Traders","Quantum Agri Ltd","Ridgeline Corp","Summit Supply LLC","Tundra Foods",
+        "Union Harvest Co","Valley Fresh Inc","Westfield Traders","Xavier Commodities","Yellowstone Supply",
+        "Zenith Imports","Atlas Trade Group","Beacon Foods","Cascade Supply","Dune Commodities",
+        "Eastern Provisions","Finch Trading LLC","Gravel Road Foods","Highpoint Supply","Isle Foods Corp",
+        "Jasper Commodities","Kelp Traders Inc","Lowland Supply","Maple Fresh Co","Nimbus Foods",
+        "Opal Trading Ltd","Prairie Supply Co","Quartz Foods","Rustic Harvest","Silver Creek Supply",
+        "Timber Trade Inc","Urban Fresh LLC","Vantage Foods","Wellspring Supply","Zinc Commodities",
+    ]
+    partners = ["HDFC","Axis Bank","ICICI","Kotak","Yes Bank","Direct","Direct","HDFC","Axis Bank","ICICI"]
+
+    n = len(companies)
+    level2_dist = rng.choice(
+        ["Active Workable","Suspended Workable","Workable_Over365","NWA"],
+        size=n, p=[0.45, 0.22, 0.15, 0.18]
+    )
+    am_dist = rng.choice(POD_AMS, size=n)
+
+    facilities = rng.uniform(500_000, 8_000_000, n).round(-3)
+    overdrafts  = rng.choice([0, 0, 0, 200_000, 500_000], size=n)
+    total_facs  = facilities + overdrafts
+
+    util_by_level = {
+        "Active Workable":    lambda: rng.uniform(0.40, 0.95),
+        "Suspended Workable": lambda: rng.uniform(0.05, 0.40),
+        "Workable_Over365":   lambda: rng.uniform(0.0, 0.20),
+        "NWA":                lambda: rng.uniform(0.0, 0.15),
+    }
+    obs = np.array([total_facs[i] * util_by_level[level2_dist[i]]() for i in range(n)]).round(2)
+    irrs = rng.uniform(16, 26, n).round(2)
+
+    today = pd.Timestamp(today_ts)
+    days_since = np.where(
+        np.isin(level2_dist, ["Active Workable"]), rng.integers(5, 120, n),
+        np.where(np.isin(level2_dist, ["Suspended Workable"]), rng.integers(60, 400, n),
+        rng.integers(180, 800, n))
+    )
+    last_disb = [today - pd.Timedelta(days=int(d)) for d in days_since]
+    first_disb = [ld - pd.Timedelta(days=rng.integers(200, 900)) for ld in last_disb]
+    broad = ["Workable" if l2 != "NWA" else "Non-Workable" for l2 in level2_dist]
+
+    pod = pd.DataFrame({
+        "id":        [f"ACC{str(i).zfill(4)}" for i in range(n)],
+        "company":   companies,
+        "am":        am_dist,
+        "broad":     broad,
+        "level2":    level2_dist,
+        "v1_util":   ["active" if l2=="Active Workable" else "suspended" for l2 in level2_dist],
+        "facility":  facilities,
+        "overdraft": overdrafts,
+        "total_fac": total_facs,
+        "ob":        obs,
+        "irr":       irrs,
+        "first_disb": first_disb,
+        "last_disb":  last_disb,
+        "days_since": days_since.tolist(),
+        "acct_status": ["active"]*n,
+        "team":       ["SCF"]*n,
+    })
+
+    # ── Peak / avg OB ──
+    pod["peak_ob"]      = (obs * rng.uniform(1.0, 1.6, n)).round(2)
+    pod["avg_ob"]       = (obs * rng.uniform(0.6, 1.0, n)).round(2)
+    pod["peak_ob_date"] = [today - pd.Timedelta(days=int(rng.integers(30, 365))) for _ in range(n)]
+
+    # ── V2 invoices ──
+    co_am   = dict(zip(pod["company"].str.lower(), pod["am"]))
+    co_l2   = dict(zip(pod["company"].str.lower(), pod["level2"]))
+    inv_rows = []
+    stage_dist = ["advanced","closed","paid","received","overdue","npa","partial","processing"]
+    stage_wts  = [0.30, 0.28, 0.15, 0.10, 0.06, 0.04, 0.04, 0.03]
+    for idx, row in pod.iterrows():
+        n_inv = rng.integers(2, 14)
+        for j in range(n_inv):
+            stage    = rng.choice(stage_dist, p=stage_wts)
+            orig     = float(rng.uniform(20_000, 400_000).round(2))
+            if stage in SETTLED:
+                outstanding = 0.0
+            elif stage == "partial":
+                outstanding = float((orig * rng.uniform(0.1, 0.6)).round(2))
+            elif stage == "overdue":
+                outstanding = float((orig * rng.uniform(0.5, 1.0)).round(2))
+            elif stage == "npa":
+                outstanding = float((orig * rng.uniform(0.7, 1.0)).round(2))
+            else:
+                outstanding = orig
+            disb_date   = today - pd.Timedelta(days=int(rng.integers(5, 180)))
+            due_date    = disb_date + pd.Timedelta(days=int(rng.integers(30, 90)))
+            settle_date = due_date - pd.Timedelta(days=int(rng.integers(-10, 15))) if stage in SETTLED else pd.NaT
+            dpd_val     = max(0, int((today - due_date).days)) if stage in {"overdue","npa"} else 0
+            inv_rows.append({
+                "Invoice ID":           f"INV{idx:03d}{j:02d}",
+                "Buyer":               row["company"],
+                "buyer_lower":         row["company"].lower(),
+                "Stage":               stage,
+                "Origination":         orig,
+                "Outstanding":         outstanding,
+                "dpd":                 dpd_val,
+                "disbursed_date":      disb_date,
+                "settlement_date":     settle_date,
+                "due_date_of_invoice": due_date,
+                "am":                  row["am"],
+                "level2":              row["level2"],
+            })
+    v2p = pd.DataFrame(inv_rows)
+
+    # ── OB pivot (12 months of daily data, sampled weekly) ──
+    date_range = pd.date_range(today - pd.DateOffset(months=12), today, freq="7D")
+    ob_rows = {}
+    for acc_id, base_ob in zip(pod["id"], obs):
+        if base_ob == 0: continue
+        series = np.clip(base_ob * (1 + rng.uniform(-0.3, 0.3, len(date_range)).cumsum() * 0.03), 0, None)
+        ob_rows[acc_id] = {d.date(): round(float(v), 2) for d, v in zip(date_range, series)}
+    ob_pivot = pd.DataFrame(ob_rows).fillna(0)
+    ob_pivot.index.name = "date_key"
+
+    pod["peak_ob"]      = pod["id"].map(ob_pivot.max(axis=0)).fillna(pod["peak_ob"])
+    pod["avg_ob"]       = pod["id"].map(ob_pivot.replace(0, np.nan).mean(axis=0)).fillna(pod["avg_ob"])
+    pod["peak_ob_date"] = pod["id"].map(ob_pivot.idxmax(axis=0))
+
+    return pod, v2p, ob_pivot
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # INJECT THEME
 # ══════════════════════════════════════════════════════════════════════════════
 st.markdown(THEME_CSS, unsafe_allow_html=True)
@@ -562,6 +527,24 @@ def show_upload():
                     st.error(f"Error loading files: {e}")
                     import traceback; st.code(traceback.format_exc())
 
+        st.markdown("""
+        <div style="display:flex;align-items:center;gap:8px;margin:10px 0 4px">
+          <div style="flex:1;height:1px;background:#21262d"></div>
+          <span style="font-size:.65rem;color:#484f58;font-family:'IBM Plex Sans',sans-serif">or</span>
+          <div style="flex:1;height:1px;background:#21262d"></div>
+        </div>""", unsafe_allow_html=True)
+
+        if st.button("▶  Try with Demo Data", use_container_width=True):
+            with st.spinner("Generating demo portfolio…"):
+                today_ts = pd.Timestamp(ss.get("today_in", date.today()))
+                pod, v2p, ob_pivot = make_demo_data(today_ts)
+                ss["pod"] = pod; ss["v2p"] = v2p; ss["ob_pivot"] = ob_pivot
+                ss["today_ts"] = today_ts; ss["loaded"] = True; ss["demo"] = True
+                st.rerun()
+
+        if ss.get("demo"):
+            st.markdown('<p style="font-size:.62rem;color:#484f58;text-align:center;margin-top:4px">Demo mode — synthetic data only</p>', unsafe_allow_html=True)
+
 if not ss.get("loaded"):
     show_upload()
     st.stop()
@@ -585,8 +568,12 @@ with c_am:
                      horizontal=True, label_visibility="collapsed", key="gam")
     global_am = am_opts[gam_i]
 with c_actions:
-    if st.button("↑ Re-upload", use_container_width=True):
-        ss["loaded"] = False; st.rerun()
+    btn_label = "✕ Exit Demo" if ss.get("demo") else "↑ Re-upload"
+    if st.button(btn_label, use_container_width=True):
+        ss["loaded"] = False; ss["demo"] = False; st.rerun()
+
+if ss.get("demo"):
+    st.markdown(info_banner("▶ Demo Mode — all data is synthetic. Upload real files via Re-upload to analyse your portfolio.", "warn"), unsafe_allow_html=True)
 
 st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
 
