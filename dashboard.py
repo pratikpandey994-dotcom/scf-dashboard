@@ -16,184 +16,189 @@ st.set_page_config(
 )
 
 # ══════════════════════════════════════════════════════════════════════════════
-# DESIGN SYSTEM — injected once at app start
+# DESIGN SYSTEM
 # ══════════════════════════════════════════════════════════════════════════════
 THEME_CSS = """
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:        #0d1117;
-  --bg-card:   #161b22;
-  --bg-hover:  #1c2430;
-  --bg-input:  #0d1117;
-  --border:    #21262d;
-  --border-hi: #30363d;
-  --amber:     #f59e0b;
-  --amber-dim: #b45309;
-  --amber-bg:  rgba(245,158,11,.08);
-  --green:     #10b981;
-  --green-bg:  rgba(16,185,129,.08);
-  --red:       #ef4444;
-  --red-bg:    rgba(239,68,68,.08);
-  --orange:    #f97316;
-  --orange-bg: rgba(249,115,22,.08);
-  --blue:      #6366f1;
-  --t1:        #e6edf3;
-  --t2:        #8b949e;
-  --t3:        #484f58;
-  --mono:      'IBM Plex Mono', monospace;
-  --sans:      'IBM Plex Sans', sans-serif;
-  --r:         6px;
+/* ── Tokens ───────────────────────────────────────────────── */
+:root{
+  --bg:#0d1117; --bg-card:#161b22; --bg-hover:#1c2430; --bg-input:#0d1117;
+  --border:#21262d; --border-hi:#30363d;
+  --amber:#f59e0b; --green:#10b981; --red:#ef4444; --orange:#f97316; --blue:#6366f1;
+  --t1:#e6edf3; --t2:#8b949e; --t3:#484f58;
+  --mono:'IBM Plex Mono',monospace; --sans:'IBM Plex Sans',sans-serif; --r:6px;
 }
 
-/* ── Global overrides ─────────────────────────────────────── */
-html, body, [class*="css"] {
-  font-family: var(--sans) !important;
-  color: var(--t1);
-}
-.stApp { background: var(--bg) !important; }
-.stApp > header { background: transparent !important; }
-[data-testid="stSidebar"] { background: var(--bg-card) !important; border-right: 1px solid var(--border); }
-
-/* Remove default padding from main block */
-.block-container { padding: 1.5rem 2rem 3rem !important; max-width: 1600px !important; }
+/* ── Base ─────────────────────────────────────────────────── */
+html,body{background:var(--bg)!important;font-family:var(--sans)!important;color:var(--t1)!important}
+.stApp{background:var(--bg)!important}
+.stApp > header{background:transparent!important;border-bottom:none!important}
+section[data-testid="stSidebar"]{background:var(--bg-card)!important;border-right:1px solid var(--border)!important}
+.block-container{padding:1.2rem 2rem 3rem!important;max-width:1560px!important}
+/* Streamlit 1.57 wraps content in stMainBlockContainer */
+[data-testid="stMainBlockContainer"]{padding:1.2rem 2rem 3rem!important;max-width:1560px!important}
+p,span,div,label{font-family:var(--sans)!important}
+h1,h2,h3{font-family:var(--sans)!important;color:var(--t1)!important}
+a{color:var(--amber)!important}
 
 /* ── Tabs ─────────────────────────────────────────────────── */
-[data-testid="stTabs"] [role="tablist"] {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 3px;
-  gap: 2px;
+[data-testid="stTabs"] [role="tablist"]{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--r);padding:3px;gap:2px;flex-wrap:wrap
 }
-[data-testid="stTabs"] button[role="tab"] {
-  font-family: var(--sans) !important;
-  font-size: 0.72rem !important;
-  font-weight: 600 !important;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-  color: var(--t2) !important;
-  border-radius: 4px !important;
-  padding: 6px 14px !important;
-  border: none !important;
-  background: transparent !important;
-  transition: all .15s;
+[data-testid="stTabs"] button[role="tab"]{
+  font-family:var(--sans)!important;font-size:.7rem!important;
+  font-weight:600!important;letter-spacing:.04em;
+  color:var(--t2)!important;border-radius:4px!important;
+  padding:5px 12px!important;border:none!important;
+  background:transparent!important;transition:all .15s;white-space:nowrap
 }
-[data-testid="stTabs"] button[role="tab"]:hover { color: var(--t1) !important; background: var(--bg-hover) !important; }
-[data-testid="stTabs"] button[role="tab"][aria-selected="true"] {
-  background: var(--amber) !important;
-  color: #0d1117 !important;
+[data-testid="stTabs"] button[role="tab"]:hover{
+  color:var(--t1)!important;background:var(--bg-hover)!important
 }
-[data-testid="stTabs"] [role="tabpanel"] { padding-top: 1.5rem !important; }
-
-/* ── Native st.metric ─────────────────────────────────────── */
-[data-testid="stMetric"] {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 14px 16px !important;
+[data-testid="stTabs"] button[role="tab"][aria-selected="true"]{
+  background:var(--amber)!important;color:#0d1117!important
 }
-[data-testid="stMetricLabel"] > div {
-  font-family: var(--sans) !important;
-  font-size: 0.65rem !important;
-  font-weight: 600 !important;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--t2) !important;
-}
-[data-testid="stMetricValue"] > div {
-  font-family: var(--mono) !important;
-  font-size: 1.4rem !important;
-  font-weight: 600 !important;
-  color: var(--amber) !important;
-  line-height: 1.2;
-}
-[data-testid="stMetricDelta"] svg { display: none; }
-[data-testid="stMetricDelta"] > div {
-  font-family: var(--mono) !important;
-  font-size: 0.7rem !important;
-  color: var(--t2) !important;
+[data-testid="stTabs"] [role="tabpanel"]{padding-top:1.2rem!important}
+/* Hide Streamlit's default tab underline */
+[data-testid="stTabs"] [role="tablist"]::after{display:none!important}
+[data-testid="stTabs"] button[role="tab"] p{
+  font-family:var(--sans)!important;font-size:.7rem!important;font-weight:600!important
 }
 
-/* ── Dataframe / table ────────────────────────────────────── */
-[data-testid="stDataFrame"] { border: 1px solid var(--border) !important; border-radius: var(--r) !important; overflow: hidden; }
-[data-testid="stDataFrame"] iframe { background: var(--bg-card) !important; }
-
-/* ── Select / radio / input ───────────────────────────────── */
-[data-testid="stSelectbox"] > div, [data-testid="stNumberInput"] > div {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--r) !important;
+/* ── st.metric ────────────────────────────────────────────── */
+[data-testid="stMetric"]{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px 16px!important
 }
-[data-testid="stRadio"] { background: transparent !important; }
-[data-testid="stRadio"] label { font-size: 0.75rem !important; font-weight: 500 !important; color: var(--t2) !important; }
-[data-testid="stRadio"] [aria-checked="true"] ~ div { color: var(--amber) !important; }
+[data-testid="stMetricLabel"] p,
+[data-testid="stMetricLabel"] > div > div{
+  font-family:var(--sans)!important;font-size:.62rem!important;
+  font-weight:700!important;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--t2)!important
+}
+[data-testid="stMetricValue"] > div{
+  font-family:var(--mono)!important;font-size:1.35rem!important;
+  font-weight:600!important;color:var(--amber)!important;line-height:1.2
+}
+[data-testid="stMetricDelta"] svg{display:none!important}
+[data-testid="stMetricDelta"] > div{
+  font-family:var(--mono)!important;font-size:.68rem!important;color:var(--t3)!important
+}
+
+/* ── Dataframe ────────────────────────────────────────────── */
+[data-testid="stDataFrame"]{
+  border:1px solid var(--border)!important;border-radius:var(--r)!important;overflow:hidden
+}
+[data-testid="stDataFrame"] iframe,
+.stDataFrame iframe{background:var(--bg-card)!important}
+
+/* ── Selectbox ────────────────────────────────────────────── */
+[data-testid="stSelectbox"] > div > div{
+  background:var(--bg-card)!important;border:1px solid var(--border)!important;
+  border-radius:var(--r)!important;color:var(--t1)!important
+}
+[data-testid="stSelectbox"] svg{color:var(--t2)!important}
+
+/* ── Number input ─────────────────────────────────────────── */
+[data-testid="stNumberInput"] > div{
+  background:var(--bg-card)!important;border:1px solid var(--border)!important;border-radius:var(--r)!important
+}
+[data-testid="stNumberInput"] input{background:transparent!important;color:var(--t1)!important;font-family:var(--mono)!important}
+
+/* ── Radio ────────────────────────────────────────────────── */
+[data-testid="stRadio"] > label{
+  font-family:var(--sans)!important;font-size:.62rem!important;
+  font-weight:700!important;letter-spacing:.07em;text-transform:uppercase;color:var(--t3)!important
+}
+[data-testid="stRadio"] div[role="radiogroup"]{gap:4px!important}
+[data-testid="stRadio"] label[data-baseweb="radio"] span:first-child{
+  background:var(--bg-card)!important;border-color:var(--border-hi)!important
+}
+[data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"] span:first-child{
+  border-color:var(--amber)!important;background:var(--amber)!important
+}
+[data-testid="stRadio"] label[data-baseweb="radio"] div{
+  font-family:var(--sans)!important;font-size:.75rem!important;color:var(--t2)!important
+}
+[data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"] div{color:var(--amber)!important}
 
 /* ── Buttons ──────────────────────────────────────────────── */
-[data-testid="stButton"] > button {
-  font-family: var(--sans) !important;
-  font-weight: 600 !important;
-  font-size: 0.75rem !important;
-  letter-spacing: .05em;
-  border-radius: var(--r) !important;
-  transition: all .15s !important;
-  border: 1px solid var(--border) !important;
-  background: var(--bg-card) !important;
-  color: var(--t2) !important;
+button[data-testid="stBaseButton-secondary"]{
+  font-family:var(--sans)!important;font-weight:600!important;font-size:.74rem!important;
+  letter-spacing:.04em;border-radius:var(--r)!important;transition:all .15s!important;
+  border:1px solid var(--border)!important;background:var(--bg-card)!important;color:var(--t2)!important
 }
-[data-testid="stButton"] > button:hover { border-color: var(--amber) !important; color: var(--amber) !important; }
-[data-testid="stButton"][data-baseweb="button"] > button[kind="primary"],
-button[data-testid="stBaseButton-primary"] {
-  background: var(--amber) !important;
-  border-color: var(--amber) !important;
-  color: #0d1117 !important;
+button[data-testid="stBaseButton-secondary"]:hover{
+  border-color:var(--amber)!important;color:var(--amber)!important;background:var(--bg-hover)!important
 }
-button[data-testid="stBaseButton-primary"]:hover { background: #fbbf24 !important; }
+button[data-testid="stBaseButton-primary"]{
+  font-family:var(--sans)!important;font-weight:700!important;font-size:.78rem!important;
+  letter-spacing:.04em;border-radius:var(--r)!important;
+  background:var(--amber)!important;border-color:var(--amber)!important;color:#0d1117!important
+}
+button[data-testid="stBaseButton-primary"]:hover{background:#fbbf24!important;border-color:#fbbf24!important}
+button[data-testid="stBaseButton-primary"]:disabled{background:var(--t3)!important;border-color:var(--t3)!important;color:#0d1117!important;cursor:not-allowed!important}
 
 /* ── Expander ─────────────────────────────────────────────── */
-[data-testid="stExpander"] {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--r) !important;
-  margin-bottom: 8px;
+[data-testid="stExpander"]{
+  background:var(--bg-card)!important;border:1px solid var(--border)!important;
+  border-radius:var(--r)!important;margin-bottom:6px!important
 }
-[data-testid="stExpander"] summary {
-  font-family: var(--sans) !important;
-  font-size: 0.75rem !important;
-  font-weight: 600 !important;
-  letter-spacing: .05em;
-  color: var(--t2) !important;
-  padding: 10px 14px !important;
+[data-testid="stExpander"] details summary{
+  font-family:var(--sans)!important;font-size:.74rem!important;
+  font-weight:600!important;color:var(--t2)!important;padding:10px 14px!important
 }
-[data-testid="stExpander"] summary:hover { color: var(--t1) !important; background: var(--bg-hover) !important; border-radius: var(--r); }
-[data-testid="stExpander"] [data-testid="stExpanderDetails"] { padding: 0 14px 14px !important; }
+[data-testid="stExpander"] details summary:hover{
+  color:var(--t1)!important;background:rgba(255,255,255,.03)!important
+}
+[data-testid="stExpander"] details[open] summary{color:var(--t1)!important}
+[data-testid="stExpanderDetails"]{padding:2px 14px 12px!important}
 
 /* ── File uploader ────────────────────────────────────────── */
-[data-testid="stFileUploader"] {
-  background: var(--bg-card) !important;
-  border: 1.5px dashed var(--border-hi) !important;
-  border-radius: var(--r) !important;
-  padding: 8px !important;
+[data-testid="stFileUploaderDropzone"]{
+  background:var(--bg-card)!important;border:1.5px dashed var(--border-hi)!important;
+  border-radius:var(--r)!important;transition:border-color .2s!important
 }
-[data-testid="stFileUploader"]:hover { border-color: var(--amber) !important; }
-[data-testid="stFileUploadDropzone"] { background: transparent !important; }
+[data-testid="stFileUploaderDropzone"]:hover{border-color:var(--amber)!important}
+[data-testid="stFileUploaderDropzone"] > div{padding:12px!important}
+[data-testid="stFileUploaderDropzone"] span{font-family:var(--sans)!important;font-size:.76rem!important;color:var(--t2)!important}
+[data-testid="stFileUploaderDropzone"] small{font-size:.62rem!important;color:var(--t3)!important}
+[data-testid="stFileUploader"] label p{
+  font-family:var(--sans)!important;font-size:.68rem!important;
+  font-weight:700!important;letter-spacing:.08em;text-transform:uppercase;color:var(--t2)!important
+}
+/* Uploaded file chip */
+[data-testid="stFileUploader"] [data-testid="stFileUploadDeleteBtn"]{color:var(--red)!important}
+[data-testid="stUploadedFile"]{background:var(--bg-hover)!important;border:1px solid var(--border)!important;border-radius:4px!important}
+[data-testid="stUploadedFileName"]{color:var(--green)!important;font-family:var(--mono)!important;font-size:.72rem!important}
 
 /* ── Date input ───────────────────────────────────────────── */
-[data-testid="stDateInput"] input {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--r) !important;
-  color: var(--amber) !important;
-  font-family: var(--mono) !important;
+[data-testid="stDateInput"] input{
+  background:var(--bg-card)!important;border:1px solid var(--border)!important;
+  border-radius:var(--r)!important;color:var(--amber)!important;font-family:var(--mono)!important;font-size:.85rem!important
+}
+[data-testid="stDateInput"] label p{
+  font-family:var(--sans)!important;font-size:.68rem!important;
+  font-weight:700!important;letter-spacing:.08em;text-transform:uppercase;color:var(--t2)!important
 }
 
-/* ── Spinner / alerts ─────────────────────────────────────── */
-[data-testid="stSpinner"] { color: var(--amber) !important; }
-.stAlert { border-radius: var(--r) !important; font-size: 0.8rem !important; }
+/* ── Alerts ───────────────────────────────────────────────── */
+[data-testid="stAlert"]{border-radius:var(--r)!important;font-size:.8rem!important;font-family:var(--sans)!important}
 
 /* ── Divider ──────────────────────────────────────────────── */
-hr { border-color: var(--border) !important; margin: 1rem 0 !important; }
+[data-testid="stMarkdown"] hr{border:none!important;border-top:1px solid var(--border)!important;margin:.8rem 0!important}
+
+/* ── Spinner ──────────────────────────────────────────────── */
+[data-testid="stSpinner"] > div{border-top-color:var(--amber)!important}
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border-hi);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--t3)}
 </style>
 """
 
@@ -457,56 +462,93 @@ ss = st.session_state
 # ══════════════════════════════════════════════════════════════════════════════
 # UPLOAD SCREEN
 # ══════════════════════════════════════════════════════════════════════════════
+def _file_status_html(checks):
+    rows = ""
+    for name, loaded, required in checks:
+        if loaded:
+            icon, ic, lc, tag = "✓", "#10b981", "#e6edf3", ""
+        elif required:
+            icon, ic, lc, tag = "○", "#f59e0b", "#8b949e", ' <span style="font-size:.6rem;color:#484f58;font-style:italic">required</span>'
+        else:
+            icon, ic, lc, tag = "○", "#30363d", "#484f58", ""
+        rows += f"""<div style="display:flex;align-items:center;gap:10px;padding:7px 12px;border-bottom:1px solid #21262d">
+          <span style="font-family:'IBM Plex Mono',monospace;font-weight:700;color:{ic};font-size:.8rem;width:14px;text-align:center">{icon}</span>
+          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:.76rem;color:{lc}">{name}{tag}</span>
+        </div>"""
+    return f'<div style="background:#161b22;border:1px solid #21262d;border-radius:6px;overflow:hidden">{rows}</div>'
+
 def show_upload():
+    # ── Header ──
     st.markdown("""
-    <div style="max-width:900px;margin:2rem auto 0">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:4px">
-        <div style="width:36px;height:36px;background:#f59e0b;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.1rem">📊</div>
+    <div style="padding:2rem 0 1.5rem">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <div style="width:40px;height:40px;background:#f59e0b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">📊</div>
         <div>
-          <div style="font-family:'IBM Plex Sans',sans-serif;font-size:1.4rem;font-weight:700;letter-spacing:-.01em;color:#e6edf3">CP POD <span style="color:#f59e0b">·</span> SCF Portfolio</div>
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:#484f58;letter-spacing:.08em;text-transform:uppercase">Supply Chain Finance Dashboard · Upload weekly files to launch</div>
+          <div style="font-family:'IBM Plex Sans',sans-serif;font-size:1.5rem;font-weight:700;color:#e6edf3;line-height:1.1">
+            CP POD <span style="color:#f59e0b">·</span> SCF Portfolio
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:#484f58;letter-spacing:.1em;text-transform:uppercase;margin-top:3px">
+            Supply Chain Finance Intelligence Platform
+          </div>
         </div>
       </div>
+      <div style="height:1px;background:linear-gradient(90deg,#f59e0b40,#21262d);margin:1rem 0"></div>
+      <p style="font-family:'IBM Plex Sans',sans-serif;font-size:.82rem;color:#8b949e;margin:0">
+        Upload your weekly Excel files below, set today's date, then click <strong style="color:#e6edf3">Launch Dashboard</strong>.
+        Required files: View 1, View 2, Master Handover. Historical &amp; Current OB unlock the Peak Analysis tab.
+      </p>
     </div>
     """, unsafe_allow_html=True)
-    st.markdown("<div style='max-width:900px;margin:0 auto'>", unsafe_allow_html=True)
-    st.markdown("---")
 
-    # File zones
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.markdown('<div style="font-family:IBM Plex Sans;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f59e0b;margin-bottom:6px">● Required Weekly</div>', unsafe_allow_html=True)
-        ss["up_v1"] = st.file_uploader("View 1 — Accounts", type=["xlsx","xls"], key="fu_v1", help="facility · OB · utilization · AM")
-        ss["up_v2"] = st.file_uploader("View 2 — Invoices",  type=["xlsx","xls"], key="fu_v2", help="stages · DPD · origination · settlement")
-        ss["up_mh"] = st.file_uploader("Master Handover",    type=["xlsx","xls"], key="fu_mh", help="Buyer_ID · AM · Account_Status · Broad_Account_Status")
-    with c2:
-        st.markdown('<div style="font-family:IBM Plex Sans;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8b949e;margin-bottom:6px">○ Optional — enables OB Trend & Peak</div>', unsafe_allow_html=True)
-        ss["up_obhist"] = st.file_uploader("Historical OB (File 5)", type=["xlsx","xls"], key="fu_obhist", help="Jun 2020 – Apr 2026")
-        ss["up_obcurr"] = st.file_uploader("Current OB File",        type=["xlsx","xls"], key="fu_obcurr", help="May 2026 onwards")
-    with c3:
-        st.markdown('<div style="font-family:IBM Plex Sans;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8b949e;margin-bottom:6px">Status</div>', unsafe_allow_html=True)
+    # ── Upload zones ──
+    left, right = st.columns([3, 2], gap="large")
+
+    with left:
+        st.markdown('<p style="font-family:IBM Plex Sans;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f59e0b;margin-bottom:8px">● Required — upload every week</p>', unsafe_allow_html=True)
+        c1, c2, c3 = st.columns(3)
+        with c1: ss["up_v1"] = st.file_uploader("View 1 — Accounts",   type=["xlsx","xls"], key="fu_v1",    help="facility · OB · utilization · AM")
+        with c2: ss["up_v2"] = st.file_uploader("View 2 — Invoices",   type=["xlsx","xls"], key="fu_v2",    help="stages · DPD · origination · settlement")
+        with c3: ss["up_mh"] = st.file_uploader("Master Handover",     type=["xlsx","xls"], key="fu_mh",    help="Buyer_ID · AM · Account_Status")
+
+        st.markdown('<p style="font-family:IBM Plex Sans;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8b949e;margin:16px 0 8px">○ Optional — enables OB Trend &amp; Peak Analysis</p>', unsafe_allow_html=True)
+        c4, c5 = st.columns(2)
+        with c4: ss["up_obhist"] = st.file_uploader("Historical OB (File 5)", type=["xlsx","xls"], key="fu_obhist", help="Jun 2020 – Apr 2026")
+        with c5: ss["up_obcurr"] = st.file_uploader("Current OB File",        type=["xlsx","xls"], key="fu_obcurr", help="May 2026 onwards")
+
+    with right:
+        # Status panel
+        st.markdown('<p style="font-family:IBM Plex Sans;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8b949e;margin-bottom:8px">Upload Status</p>', unsafe_allow_html=True)
         checks = [
-            ("View 1 — Accounts",   bool(ss.get("up_v1")),     True),
-            ("View 2 — Invoices",   bool(ss.get("up_v2")),     True),
-            ("Master Handover",     bool(ss.get("up_mh")),     True),
-            ("Historical OB",       bool(ss.get("up_obhist")), False),
-            ("Current OB",          bool(ss.get("up_obcurr")), False),
+            ("View 1 — Accounts",     bool(ss.get("up_v1")),     True),
+            ("View 2 — Invoices",     bool(ss.get("up_v2")),     True),
+            ("Master Handover",       bool(ss.get("up_mh")),     True),
+            ("Historical OB",         bool(ss.get("up_obhist")), False),
+            ("Current OB",            bool(ss.get("up_obcurr")), False),
         ]
-        for name, loaded, required in checks:
-            dot_col = "#10b981" if loaded else ("#f59e0b" if required else "#21262d")
-            label_col = "#e6edf3" if loaded else ("#8b949e" if required else "#484f58")
-            req_tag = ' <span style="color:#484f58;font-size:.58rem">required</span>' if required and not loaded else ""
-            st.markdown(f'<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #21262d"><span style="color:{dot_col};font-size:.7rem">{"●" if loaded else "○"}</span><span style="font-family:IBM Plex Sans;font-size:.76rem;color:{label_col}">{name}{req_tag}</span></div>', unsafe_allow_html=True)
+        st.markdown(_file_status_html(checks), unsafe_allow_html=True)
 
-    st.markdown("---")
-    col_d, col_b, _ = st.columns([2, 2, 3])
-    with col_d:
-        ss["today_in"] = st.date_input("Today's Date", value=date.today(), label_visibility="visible")
-    with col_b:
-        st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
-        ready = all([ss.get("up_v1"), ss.get("up_v2"), ss.get("up_mh")])
+        loaded_count = sum(1 for _, ok, req in checks if ok and req)
+        req_count    = sum(1 for _, _, req in checks if req)
+        prog_pct     = int(loaded_count / req_count * 100)
+        bar_color    = "#10b981" if loaded_count == req_count else "#f59e0b"
+        st.markdown(f"""
+        <div style="margin-top:10px">
+          <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:#484f58;margin-bottom:4px">
+            <span>Required files</span><span style="color:{bar_color}">{loaded_count}/{req_count}</span>
+          </div>
+          <div style="background:#21262d;border-radius:3px;height:4px;overflow:hidden">
+            <div style="background:{bar_color};width:{prog_pct}%;height:4px;border-radius:3px;transition:width .3s"></div>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Date + launch
+        st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+        ss["today_in"] = st.date_input("Today's Date (D.today)", value=date.today())
+        st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
+        ready = loaded_count == req_count
         if st.button("LAUNCH DASHBOARD →", disabled=not ready, type="primary", use_container_width=True):
-            with st.spinner("Processing — loading Excel files into memory…"):
+            with st.spinner("Processing files — first load takes ~30 seconds…"):
                 try:
                     v1p = load_v1(ss["up_v1"]); v2p_ = load_v2(ss["up_v2"]); mhp = load_mh(ss["up_mh"])
                     obh = load_ob(ss["up_obhist"], lambda d: d < OB_CUTOFF)  if ss.get("up_obhist") else None
@@ -517,9 +559,8 @@ def show_upload():
                     ss["today_ts"] = today_ts; ss["loaded"] = True
                     st.rerun()
                 except Exception as e:
-                    st.error(f"Error: {e}")
+                    st.error(f"Error loading files: {e}")
                     import traceback; st.code(traceback.format_exc())
-    st.markdown("</div>", unsafe_allow_html=True)
 
 if not ss.get("loaded"):
     show_upload()
