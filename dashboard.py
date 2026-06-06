@@ -370,15 +370,15 @@ def make_demo_data(today_ts):
         n_inv = rng.integers(2, 14)
         for j in range(n_inv):
             stage    = rng.choice(stage_dist, p=stage_wts)
-            orig     = float(rng.uniform(20_000, 400_000).round(2))
+            orig     = round(float(rng.uniform(20_000, 400_000)), 2)
             if stage in SETTLED:
                 outstanding = 0.0
             elif stage == "partial":
-                outstanding = float((orig * rng.uniform(0.1, 0.6)).round(2))
+                outstanding = round(orig * float(rng.uniform(0.1, 0.6)), 2)
             elif stage == "overdue":
-                outstanding = float((orig * rng.uniform(0.5, 1.0)).round(2))
+                outstanding = round(orig * float(rng.uniform(0.5, 1.0)), 2)
             elif stage == "npa":
-                outstanding = float((orig * rng.uniform(0.7, 1.0)).round(2))
+                outstanding = round(orig * float(rng.uniform(0.7, 1.0)), 2)
             else:
                 outstanding = orig
             disb_date   = today - pd.Timedelta(days=int(rng.integers(5, 180)))
