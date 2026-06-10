@@ -15,21 +15,62 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# THEME_CSS — only what provably works in Streamlit 1.57
-# Background + layout via config.toml. CSS here handles padding, fonts, scrollbar.
+# Theme aligned with the AM dashboard.
 THEME_CSS = """
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* Layout & spacing */
-.block-container{padding:1rem 2rem 3rem!important;max-width:1560px!important}
-[data-testid="stMainBlockContainer"]{padding:1rem 2rem 3rem!important;max-width:1560px!important}
-header[data-testid="stHeader"]{background:transparent!important}
-/* Thin scrollbar */
-::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-track{background:#0d1117}
-::-webkit-scrollbar-thumb{background:#30363d;border-radius:2px}
-/* Reduce gap between st.columns */
+html, body, [class*="css"] {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1f2937;
+}
+.block-container,
+[data-testid="stMainBlockContainer"] {
+    padding: 2rem 2rem 3rem !important;
+    max-width: 1580px !important;
+}
+header[data-testid="stHeader"] {
+    background: #f9fafb !important;
+}
+h1 {
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: -0.025em;
+}
+h2, h3 {
+    font-weight: 600;
+    color: #374151;
+    letter-spacing: -0.01em;
+}
+div[data-testid="stExpander"] {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    overflow: hidden;
+}
+.stTabs [data-baseweb="tab-list"] {
+    gap: 24px;
+    background-color: transparent;
+}
+.stTabs [data-baseweb="tab"] {
+    height: 50px;
+    white-space: pre-wrap;
+    background-color: transparent;
+    border-radius: 4px 4px 0 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #6b7280;
+    font-weight: 500;
+}
+.stTabs [aria-selected="true"] {
+    color: #0d9488 !important;
+    border-bottom-color: #0d9488 !important;
+    font-weight: 600 !important;
+}
+.stDataFrame {
+    border: 1px solid #f3f4f6;
+    border-radius: 8px;
+}
 [data-testid="column"]{padding:0 6px!important}
 </style>
 """
@@ -37,48 +78,48 @@ header[data-testid="stHeader"]{background:transparent!important}
 # ── Plotly base layout (reuse across all charts) ─────────────
 def plotly_layout(**kwargs):
     base = dict(
-        paper_bgcolor="#161b22", plot_bgcolor="#161b22",
-        font=dict(family="IBM Plex Sans", color="#8b949e", size=11),
+        paper_bgcolor="#ffffff", plot_bgcolor="#ffffff",
+        font=dict(family="Inter", color="#374151", size=11),
         margin=dict(l=8, r=8, t=28, b=8),
         legend=dict(bgcolor="rgba(0,0,0,0)", bordercolor="rgba(0,0,0,0)",
-                    font=dict(size=11, color="#8b949e")),
-        xaxis=dict(gridcolor="rgba(33,38,45,.6)", zeroline=False,
-                   tickfont=dict(family="IBM Plex Mono", size=10)),
-        yaxis=dict(gridcolor="rgba(33,38,45,.6)", zeroline=False,
-                   tickfont=dict(family="IBM Plex Mono", size=10)),
+                    font=dict(size=11, color="#374151")),
+        xaxis=dict(gridcolor="#f3f4f6", zeroline=False,
+                   tickfont=dict(family="Inter", size=10)),
+        yaxis=dict(gridcolor="#f3f4f6", zeroline=False,
+                   tickfont=dict(family="Inter", size=10)),
     )
     base.update(kwargs)
     return base
 
 # ── HTML component helpers ────────────────────────────────────
 def kpi_card(label, value, sub="", color="amber", border=True):
-    c = {"amber":"#f59e0b","green":"#10b981","red":"#ef4444","orange":"#f97316","muted":"#484f58"}[color]
+    c = {"amber":"#0d9488","green":"#059669","red":"#dc2626","orange":"#ea580c","muted":"#6b7280"}[color]
     bc = f"border-left:3px solid {c};" if border else ""
-    return f"""<div style="background:#161b22;border:1px solid #21262d;{bc}border-radius:6px;padding:14px 16px;height:100%">
-  <div style="font-family:'IBM Plex Sans',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8b949e;margin-bottom:6px">{label}</div>
-  <div style="font-family:'IBM Plex Mono',monospace;font-size:1.45rem;font-weight:600;color:{c};line-height:1.1">{value}</div>
-  {"" if not sub else f'<div style="font-family:IBM Plex Mono,monospace;font-size:.68rem;color:#484f58;margin-top:4px">{sub}</div>'}
+    return f"""<div style="background:#ffffff;border:1px solid #f3f4f6;{bc}border-radius:12px;padding:18px 20px;height:100%;box-shadow:0 4px 6px -1px rgba(0,0,0,.05),0 2px 4px -1px rgba(0,0,0,.03)">
+  <div style="font-family:Inter,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#6b7280;margin-bottom:6px">{label}</div>
+  <div style="font-family:Inter,sans-serif;font-size:1.65rem;font-weight:700;color:#111827;line-height:1.1">{value}</div>
+  {"" if not sub else f'<div style="font-family:Inter,sans-serif;font-size:.75rem;color:#6b7280;margin-top:6px">{sub}</div>'}
 </div>"""
 
 def badge(text, variant="default"):
     styles = {
-        "active":    "background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.25)",
-        "suspended": "background:rgba(249,115,22,.12);color:#f97316;border:1px solid rgba(249,115,22,.25)",
-        "npa":       "background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.25)",
-        "overdue":   "background:rgba(249,115,22,.12);color:#f97316;border:1px solid rgba(249,115,22,.25)",
-        "clean":     "background:rgba(16,185,129,.10);color:#10b981;border:1px solid rgba(16,185,129,.2)",
-        "target":    "background:rgba(245,158,11,.12);color:#f59e0b;border:1px solid rgba(245,158,11,.25)",
-        "nwa":       "background:rgba(72,79,88,.2);color:#484f58;border:1px solid rgba(72,79,88,.3)",
-        "default":   "background:rgba(139,148,158,.1);color:#8b949e;border:1px solid rgba(139,148,158,.2)",
+        "active":    "background:#ecfdf5;color:#047857;border:1px solid #a7f3d0",
+        "suspended": "background:#fff7ed;color:#c2410c;border:1px solid #fed7aa",
+        "npa":       "background:#fef2f2;color:#b91c1c;border:1px solid #fecaca",
+        "overdue":   "background:#fff7ed;color:#c2410c;border:1px solid #fed7aa",
+        "clean":     "background:#ecfdf5;color:#047857;border:1px solid #a7f3d0",
+        "target":    "background:#f0fdfa;color:#0f766e;border:1px solid #99f6e4",
+        "nwa":       "background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb",
+        "default":   "background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb",
     }
     s = styles.get(variant, styles["default"])
-    return f'<span style="display:inline-block;{s};border-radius:10px;font-family:IBM Plex Sans,sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;white-space:nowrap">{text}</span>'
+    return f'<span style="display:inline-block;{s};border-radius:999px;font-family:Inter,sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;white-space:nowrap">{text}</span>'
 
 def section_header(title, subtitle="", right=""):
-    sub_html = f'<span style="font-size:.72rem;color:#484f58;font-weight:400;margin-left:10px">{subtitle}</span>' if subtitle else ""
-    right_html = f'<span style="font-size:.68rem;color:#484f58">{right}</span>' if right else ""
-    return f"""<div style="display:flex;align-items:baseline;justify-content:space-between;margin:1.4rem 0 .8rem;padding-bottom:.5rem;border-bottom:1px solid #21262d">
-  <div><span style="font-family:'IBM Plex Sans',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8b949e">{title}</span>{sub_html}</div>
+    sub_html = f'<span style="font-size:.82rem;color:#9ca3af;font-weight:400;margin-left:10px">{subtitle}</span>' if subtitle else ""
+    right_html = f'<span style="font-size:.75rem;color:#9ca3af">{right}</span>' if right else ""
+    return f"""<div style="display:flex;align-items:baseline;justify-content:space-between;margin:1.5rem 0 .8rem;padding-bottom:.55rem;border-bottom:1px solid #f3f4f6">
+  <div><span style="font-family:Inter,sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#374151">{title}</span>{sub_html}</div>
   {right_html}
 </div>"""
 
@@ -86,32 +127,32 @@ def stat_row(items):
     """Horizontal row of small labeled stats."""
     cells = "".join(
         f'<div style="display:flex;flex-direction:column;gap:2px;min-width:80px">'
-        f'<span style="font-family:IBM Plex Sans;font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#484f58">{lbl}</span>'
-        f'<span style="font-family:IBM Plex Mono;font-size:.85rem;font-weight:600;color:{col}">{val}</span></div>'
+        f'<span style="font-family:Inter;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#6b7280">{lbl}</span>'
+        f'<span style="font-family:Inter;font-size:.9rem;font-weight:700;color:{col}">{val}</span></div>'
         for lbl, val, col in items
     )
-    return f'<div style="display:flex;gap:20px;flex-wrap:wrap;background:#161b22;border:1px solid #21262d;border-radius:6px;padding:12px 16px;margin-bottom:8px">{cells}</div>'
+    return f'<div style="display:flex;gap:20px;flex-wrap:wrap;background:#ffffff;border:1px solid #f3f4f6;border-radius:12px;padding:14px 18px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.03)">{cells}</div>'
 
 def am_scorecard(name, initials, color, metrics):
     """AM card with avatar + metrics."""
     rows = "".join(
-        f'<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #21262d">'
-        f'<span style="font-family:IBM Plex Sans;font-size:.72rem;color:#8b949e">{lbl}</span>'
-        f'<span style="font-family:IBM Plex Mono;font-size:.78rem;font-weight:600;color:{clr}">{val}</span></div>'
+        f'<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f6">'
+        f'<span style="font-family:Inter;font-size:.76rem;color:#6b7280">{lbl}</span>'
+        f'<span style="font-family:Inter;font-size:.8rem;font-weight:700;color:{clr}">{val}</span></div>'
         for lbl, val, clr in metrics
     )
-    return f"""<div style="background:#161b22;border:1px solid #21262d;border-top:2px solid {color};border-radius:6px;overflow:hidden">
-  <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(255,255,255,.02)">
-    <div style="width:32px;height:32px;border-radius:50%;background:{color};color:#0d1117;display:flex;align-items:center;justify-content:center;font-family:IBM Plex Mono;font-weight:700;font-size:.75rem;flex-shrink:0">{initials}</div>
-    <div style="font-family:IBM Plex Sans;font-weight:600;font-size:.88rem;color:#e6edf3">{name}</div>
+    return f"""<div style="background:#ffffff;border:1px solid #f3f4f6;border-top:3px solid {color};border-radius:12px;overflow:hidden;box-shadow:0 4px 6px -1px rgba(0,0,0,.05),0 2px 4px -1px rgba(0,0,0,.03)">
+  <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f9fafb">
+    <div style="width:32px;height:32px;border-radius:50%;background:{color};color:#ffffff;display:flex;align-items:center;justify-content:center;font-family:Inter;font-weight:700;font-size:.75rem;flex-shrink:0">{initials}</div>
+    <div style="font-family:Inter;font-weight:700;font-size:.9rem;color:#111827">{name}</div>
   </div>
   <div style="padding:10px 14px">{rows}</div>
 </div>"""
 
 def info_banner(text, variant="info"):
-    colors = {"info": ("#6366f1","rgba(99,102,241,.1)"), "warn": ("#f97316","rgba(249,115,22,.1)"), "tip": ("#f59e0b","rgba(245,158,11,.1)")}
+    colors = {"info": ("#0d9488","#f0fdfa"), "warn": ("#ea580c","#fff7ed"), "tip": ("#0d9488","#f0fdfa")}
     c, bg = colors.get(variant, colors["info"])
-    return f'<div style="background:{bg};border:1px solid {c}40;border-radius:6px;padding:10px 14px;font-size:.76rem;color:{c};margin:8px 0">{text}</div>'
+    return f'<div style="background:{bg};border:1px solid {c}40;border-radius:10px;padding:10px 14px;font-size:.82rem;color:{c};margin:8px 0">{text}</div>'
 
 # ══════════════════════════════════════════════════════════════════════════════
 # CONSTANTS
@@ -431,35 +472,35 @@ def _file_status_html(checks):
     rows = ""
     for name, loaded, required in checks:
         if loaded:
-            icon, ic, lc, tag = "✓", "#10b981", "#e6edf3", ""
+            icon, ic, lc, tag = "✓", "#10b981", "#111827", ""
         elif required:
-            icon, ic, lc, tag = "○", "#f59e0b", "#8b949e", ' <span style="font-size:.6rem;color:#484f58;font-style:italic">required</span>'
+            icon, ic, lc, tag = "○", "#f59e0b", "#6b7280", ' <span style="font-size:.6rem;color:#9ca3af;font-style:italic">required</span>'
         else:
-            icon, ic, lc, tag = "○", "#30363d", "#484f58", ""
-        rows += f"""<div style="display:flex;align-items:center;gap:10px;padding:7px 12px;border-bottom:1px solid #21262d">
-          <span style="font-family:'IBM Plex Mono',monospace;font-weight:700;color:{ic};font-size:.8rem;width:14px;text-align:center">{icon}</span>
-          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:.76rem;color:{lc}">{name}{tag}</span>
+            icon, ic, lc, tag = "○", "#d1d5db", "#9ca3af", ""
+        rows += f"""<div style="display:flex;align-items:center;gap:10px;padding:7px 12px;border-bottom:1px solid #e5e7eb">
+          <span style="font-family:Inter,sans-serif;font-weight:700;color:{ic};font-size:.8rem;width:14px;text-align:center">{icon}</span>
+          <span style="font-family:Inter,sans-serif;font-size:.76rem;color:{lc}">{name}{tag}</span>
         </div>"""
-    return f'<div style="background:#161b22;border:1px solid #21262d;border-radius:6px;overflow:hidden">{rows}</div>'
+    return f'<div style="background:#ffffff;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden">{rows}</div>'
 
 def show_upload():
     # ── Header ──
     st.markdown("""
     <div style="padding:2rem 0 1.5rem">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-        <div style="width:40px;height:40px;background:#f59e0b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">📊</div>
+        <div style="width:40px;height:40px;background:#0d9488;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;color:#ffffff">📊</div>
         <div>
-          <div style="font-family:'IBM Plex Sans',sans-serif;font-size:1.5rem;font-weight:700;color:#e6edf3;line-height:1.1">
+          <div style="font-family:Inter,sans-serif;font-size:1.5rem;font-weight:700;color:#111827;line-height:1.1">
             CP POD <span style="color:#f59e0b">·</span> SCF Portfolio
           </div>
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:#484f58;letter-spacing:.1em;text-transform:uppercase;margin-top:3px">
+          <div style="font-family:Inter,sans-serif;font-size:.65rem;color:#9ca3af;letter-spacing:.1em;text-transform:uppercase;margin-top:3px">
             Supply Chain Finance Intelligence Platform
           </div>
         </div>
       </div>
-      <div style="height:1px;background:linear-gradient(90deg,#f59e0b40,#21262d);margin:1rem 0"></div>
-      <p style="font-family:'IBM Plex Sans',sans-serif;font-size:.82rem;color:#8b949e;margin:0">
-        Upload your weekly Excel files below, set today's date, then click <strong style="color:#e6edf3">Launch Dashboard</strong>.
+      <div style="height:1px;background:linear-gradient(90deg,#f59e0b40,#e5e7eb);margin:1rem 0"></div>
+      <p style="font-family:Inter,sans-serif;font-size:.82rem;color:#6b7280;margin:0">
+        Upload your weekly Excel files below, set today's date, then click <strong style="color:#111827">Launch Dashboard</strong>.
         Required files: View 1, View 2, Master Handover. Historical &amp; Current OB unlock the Peak Analysis tab.
       </p>
     </div>
@@ -469,20 +510,20 @@ def show_upload():
     left, right = st.columns([3, 2], gap="large")
 
     with left:
-        st.markdown('<p style="font-family:IBM Plex Sans;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f59e0b;margin-bottom:8px">● Required — upload every week</p>', unsafe_allow_html=True)
+        st.markdown('<p style="font-family:Inter;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f59e0b;margin-bottom:8px">● Required — upload every week</p>', unsafe_allow_html=True)
         c1, c2, c3 = st.columns(3)
         with c1: ss["up_v1"] = st.file_uploader("View 1 — Accounts",   type=["xlsx","xls"], key="fu_v1",    help="facility · OB · utilization · AM")
         with c2: ss["up_v2"] = st.file_uploader("View 2 — Invoices",   type=["xlsx","xls"], key="fu_v2",    help="stages · DPD · origination · settlement")
         with c3: ss["up_mh"] = st.file_uploader("Master Handover",     type=["xlsx","xls"], key="fu_mh",    help="Buyer_ID · AM · Account_Status")
 
-        st.markdown('<p style="font-family:IBM Plex Sans;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8b949e;margin:16px 0 8px">○ Optional — enables OB Trend &amp; Peak Analysis</p>', unsafe_allow_html=True)
+        st.markdown('<p style="font-family:Inter;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6b7280;margin:16px 0 8px">○ Optional — enables OB Trend &amp; Peak Analysis</p>', unsafe_allow_html=True)
         c4, c5 = st.columns(2)
         with c4: ss["up_obhist"] = st.file_uploader("Historical OB (File 5)", type=["xlsx","xls"], key="fu_obhist", help="Jun 2020 – Apr 2026")
         with c5: ss["up_obcurr"] = st.file_uploader("Current OB File",        type=["xlsx","xls"], key="fu_obcurr", help="May 2026 onwards")
 
     with right:
         # Status panel
-        st.markdown('<p style="font-family:IBM Plex Sans;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8b949e;margin-bottom:8px">Upload Status</p>', unsafe_allow_html=True)
+        st.markdown('<p style="font-family:Inter;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6b7280;margin-bottom:8px">Upload Status</p>', unsafe_allow_html=True)
         checks = [
             ("View 1 — Accounts",     bool(ss.get("up_v1")),     True),
             ("View 2 — Invoices",     bool(ss.get("up_v2")),     True),
@@ -498,10 +539,10 @@ def show_upload():
         bar_color    = "#10b981" if loaded_count == req_count else "#f59e0b"
         st.markdown(f"""
         <div style="margin-top:10px">
-          <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:#484f58;margin-bottom:4px">
+          <div style="display:flex;justify-content:space-between;font-family:Inter,sans-serif;font-size:.65rem;color:#9ca3af;margin-bottom:4px">
             <span>Required files</span><span style="color:{bar_color}">{loaded_count}/{req_count}</span>
           </div>
-          <div style="background:#21262d;border-radius:3px;height:4px;overflow:hidden">
+          <div style="background:#e5e7eb;border-radius:3px;height:4px;overflow:hidden">
             <div style="background:{bar_color};width:{prog_pct}%;height:4px;border-radius:3px;transition:width .3s"></div>
           </div>
         </div>
@@ -529,9 +570,9 @@ def show_upload():
 
         st.markdown("""
         <div style="display:flex;align-items:center;gap:8px;margin:10px 0 4px">
-          <div style="flex:1;height:1px;background:#21262d"></div>
-          <span style="font-size:.65rem;color:#484f58;font-family:'IBM Plex Sans',sans-serif">or</span>
-          <div style="flex:1;height:1px;background:#21262d"></div>
+          <div style="flex:1;height:1px;background:#e5e7eb"></div>
+          <span style="font-size:.65rem;color:#9ca3af;font-family:Inter,sans-serif">or</span>
+          <div style="flex:1;height:1px;background:#e5e7eb"></div>
         </div>""", unsafe_allow_html=True)
 
         if st.button("▶  Try with Demo Data", use_container_width=True):
@@ -543,7 +584,7 @@ def show_upload():
                 st.rerun()
 
         if ss.get("demo"):
-            st.markdown('<p style="font-size:.62rem;color:#484f58;text-align:center;margin-top:4px">Demo mode — synthetic data only</p>', unsafe_allow_html=True)
+            st.markdown('<p style="font-size:.62rem;color:#9ca3af;text-align:center;margin-top:4px">Demo mode — synthetic data only</p>', unsafe_allow_html=True)
 
 if not ss.get("loaded"):
     show_upload()
@@ -559,8 +600,8 @@ sorted_ob_keys = sorted(ob_pivot.index) if not ob_pivot.empty else []
 c_logo, c_am, c_actions = st.columns([3, 6, 2])
 with c_logo:
     st.markdown(f"""<div style="display:flex;align-items:center;gap:10px;padding:4px 0">
-      <div style="font-family:'IBM Plex Sans',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.04em;color:#e6edf3">CP POD <span style="color:#f59e0b">·</span> SCF</div>
-      <div style="background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#f59e0b;font-family:'IBM Plex Mono',monospace;font-size:.65rem;padding:2px 9px;border-radius:12px">{today_ts.strftime('%d %b %Y')}</div>
+      <div style="font-family:Inter,sans-serif;font-size:1rem;font-weight:700;letter-spacing:.04em;color:#111827">CP POD <span style="color:#f59e0b">·</span> SCF</div>
+      <div style="background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#f59e0b;font-family:Inter,sans-serif;font-size:.65rem;padding:2px 9px;border-radius:12px">{today_ts.strftime('%d %b %Y')}</div>
     </div>""", unsafe_allow_html=True)
 with c_am:
     am_opts = ["All"] + POD_AMS; am_lbls = ["All","NS","DH","DD","AN","AA"]
@@ -664,9 +705,9 @@ with tabs[1]:
             textinfo="none",
             hovertemplate="<b>%{label}</b><br>$%{value:.2f}M<extra></extra>"))
         fig.add_annotation(text=fmt_pct(clean_ob/tot_ob if tot_ob else 0),
-            x=0.5, y=0.55, font=dict(family="IBM Plex Mono", size=20, color="#10b981"), showarrow=False)
+            x=0.5, y=0.55, font=dict(family="Inter", size=20, color="#10b981"), showarrow=False)
         fig.add_annotation(text="CLEAN", x=0.5, y=0.4,
-            font=dict(family="IBM Plex Sans", size=9, color="#484f58"), showarrow=False)
+            font=dict(family="Inter", size=9, color="#9ca3af"), showarrow=False)
         fig.update_layout(**plotly_layout(height=240, showlegend=True,
             legend=dict(orientation="h", y=-0.15, x=0.5, xanchor="center")))
         st.plotly_chart(fig, use_container_width=True)
@@ -776,8 +817,8 @@ with tabs[2]:
         irr_val = wirr(accts[accts["level2"].isin(["Active Workable","Suspended Workable"])])
         col.markdown(am_scorecard(am, AM_INIT.get(am,"??"), color, [
             ("Active WA OB",   fmt_ccy(aw_["ob"].sum()),   "#f59e0b"),
-            ("Active WA Fac",  fmt_ccy(aw_["total_fac"].sum()), "#8b949e"),
-            ("Active WA Util", fmt_pct(aw_["ob"].sum()/aw_["total_fac"].sum() if aw_["total_fac"].sum()>0 else 0), "#8b949e"),
+            ("Active WA Fac",  fmt_ccy(aw_["total_fac"].sum()), "#6b7280"),
+            ("Active WA Util", fmt_pct(aw_["ob"].sum()/aw_["total_fac"].sum() if aw_["total_fac"].sum()>0 else 0), "#6b7280"),
             ("Suspended WA OB",fmt_ccy(sw_["ob"].sum()),   "#f97316"),
             ("MTD Originated", fmt_ccy(orig_mtd),          "#6366f1"),
             ("MTD Repaid",     fmt_ccy(rep_mtd),           "#10b981"),
@@ -793,7 +834,7 @@ with tabs[2]:
         o_c.append(len(a[a["level2"]=="Workable_Over365"]));  n_c.append(len(a[a["level2"]=="NWA"]))
     fig = go.Figure()
     for data,name,color in [(aw_c,"Active Workable","#10b981"),(sw_c,"Suspended WA","#f97316"),
-                             (o_c,">365d","#484f58"),(n_c,"NWA","#30363d")]:
+                             (o_c,">365d","#9ca3af"),(n_c,"NWA","#d1d5db")]:
         fig.add_trace(go.Bar(x=[a.split()[0] for a in POD_AMS],y=data,name=name,marker_color=color))
     fig.update_layout(**plotly_layout(height=260, barmode="stack"))
     st.plotly_chart(fig, use_container_width=True)
@@ -806,7 +847,7 @@ with tabs[3]:
     wa["util"]   = wa.apply(lambda r: min(r["ob"]/r["total_fac"],1) if r["total_fac"]>0 else 0, axis=1)
     wa["bucket"] = wa["util"].apply(lambda u: "Zero" if u<=0 else ("Low" if u<=0.4 else ("Medium" if u<=0.74 else "High")))
     br = {"Zero":"0%","Low":"1–40%","Medium":"41–74%","High":"75–100%"}
-    bc = {"Zero":"#484f58","Low":"#f59e0b","Medium":"#6366f1","High":"#10b981"}
+    bc = {"Zero":"#9ca3af","Low":"#f59e0b","Medium":"#6366f1","High":"#10b981"}
 
     st.markdown(section_header("Utilization Buckets"), unsafe_allow_html=True)
     for bk, col in zip(["Zero","Low","Medium","High"], st.columns(4)):
@@ -914,7 +955,7 @@ with tabs[4]:
     st.markdown(stat_row([
         ("Early Repayments", str(len(early)), "#f59e0b"),
         ("Total Value", fmt_ccy(early["Origination"].sum()), "#10b981"),
-        ("Avg Days Early", str(int(early["days_early"].mean())) if len(early) else "—", "#8b949e"),
+        ("Avg Days Early", str(int(early["days_early"].mean())) if len(early) else "—", "#6b7280"),
     ]), unsafe_allow_html=True)
     ed2=early[["Buyer","am","Invoice ID","Origination","settlement_date","due_date_of_invoice","days_early"]].copy()
     ed2["Origination"]=ed2["Origination"].apply(fmt_ccy); ed2["settlement_date"]=ed2["settlement_date"].apply(fmt_date); ed2["due_date_of_invoice"]=ed2["due_date_of_invoice"].apply(fmt_date)
@@ -978,7 +1019,7 @@ with tabs[5]:
         st.markdown(stat_row([
             ("At Risk", str(len(inact)), "#f97316"),
             ("OB at Risk", fmt_ccy(inact["ob"].sum()), "#f59e0b"),
-            ("Facility at Risk", fmt_ccy(inact["total_fac"].sum()), "#8b949e"),
+            ("Facility at Risk", fmt_ccy(inact["total_fac"].sum()), "#6b7280"),
         ]), unsafe_allow_html=True)
         ind=inact[["company","am","total_fac","ob","util","last_disb","days_since","peak_ob"]].copy()
         for c in ["total_fac","ob","peak_ob"]: ind[c]=ind[c].apply(fmt_ccy)
@@ -995,7 +1036,7 @@ with tabs[5]:
         st.markdown(stat_row([
             ("Accounts", str(len(hr)), "#f59e0b"),
             ("Total Headroom", fmt_ccy(hr["headroom"].sum()), "#10b981"),
-            ("Avg Headroom", fmt_ccy(hr["headroom"].mean()) if len(hr) else "—", "#8b949e"),
+            ("Avg Headroom", fmt_ccy(hr["headroom"].mean()) if len(hr) else "—", "#6b7280"),
         ]), unsafe_allow_html=True)
         hrd=hr[["company","am","total_fac","ob","util","headroom","peak_ob","peak_gap"]].copy()
         for c in ["total_fac","ob","peak_ob"]: hrd[c]=hrd[c].apply(fmt_ccy)
@@ -1009,7 +1050,7 @@ with tabs[5]:
     c1, c2 = st.columns(2)
     for col, ob_col, lbl in [(c1,"ob30","vs 30 Days Ago"),(c2,"ob90","vs 90 Days Ago")]:
         with col:
-            st.markdown(f'<div style="font-family:IBM Plex Sans;font-size:.68rem;font-weight:600;color:#8b949e;margin-bottom:6px">{lbl}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div style="font-family:Inter;font-size:.68rem;font-weight:600;color:#6b7280;margin-bottom:6px">{lbl}</div>', unsafe_allow_html=True)
             drop=wa[wa["ob"]<wa[ob_col]].copy(); drop["drop"]=drop["ob"]-drop[ob_col]; drop=drop.sort_values("drop")
             dd2=drop[["company","am","ob",ob_col,"drop"]].copy()
             dd2["drop_pct"]=drop.apply(lambda r:fmt_pct(r["drop"]/r[ob_col]) if r[ob_col]>0 else "—",axis=1)
@@ -1038,15 +1079,15 @@ with tabs[6]:
             baccts=am_accts[mask]
             if baccts.empty: continue
             with st.expander(f"{bname}  ·  {len(baccts)} accounts"):
-                for _,acct in baccts.iterrows():
-                    kp=f"t_{t_am}_{acct['id']}"
+                for row_pos, (_,acct) in enumerate(baccts.iterrows()):
+                    kp=f"t_{t_am}_{badge_v}_{row_pos}_{acct['id']}"
                     c1,c2,c3,c4,c5=st.columns([3,2,3,2,2])
-                    c1.markdown(f'<div style="padding:6px 0"><div style="font-family:IBM Plex Sans;font-weight:600;font-size:.84rem;color:#e6edf3">{acct["company"]}</div><div style="font-family:IBM Plex Mono;font-size:.68rem;color:#484f58">OB {fmt_ccy(acct["ob"])} · Fac {fmt_ccy(acct["total_fac"])}</div></div>', unsafe_allow_html=True)
+                    c1.markdown(f'<div style="padding:6px 0"><div style="font-family:Inter;font-weight:600;font-size:.84rem;color:#111827">{acct["company"]}</div><div style="font-family:Inter;font-size:.68rem;color:#9ca3af">OB {fmt_ccy(acct["ob"])} · Fac {fmt_ccy(acct["total_fac"])}</div></div>', unsafe_allow_html=True)
                     c2.selectbox("Status",["—","In Progress","Contacted","Resolved","Escalated"],key=f"{kp}_s",label_visibility="collapsed")
                     c3.text_area("Comment","",key=f"{kp}_c",height=68,label_visibility="collapsed",placeholder="Add a note…")
                     c4.date_input("Last Contact",value=None,key=f"{kp}_lc",label_visibility="collapsed")
                     c5.date_input("Next Follow-up",value=None,key=f"{kp}_nf",label_visibility="collapsed")
-                    st.markdown('<hr style="margin:2px 0;border-color:#21262d">', unsafe_allow_html=True)
+                    st.markdown('<hr style="margin:2px 0;border-color:#e5e7eb">', unsafe_allow_html=True)
     else:
         ov_cos_m=set(v2f[v2f["Stage"].isin({"overdue","npa"})]["buyer_lower"])
         rows=[{"AM":am,"Total":len(fa[fa["am"]==am]),
