@@ -9,13 +9,13 @@ import calendar
 import io
 
 st.set_page_config(
-    page_title="CP Pod · SCF Portfolio",
-    page_icon="📊",
+    page_title="CP Pod - SCF Portfolio",
+    page_icon="SCF",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
 
-# Theme aligned with the AM dashboard.
+# Theme is driven primarily by .streamlit/config.toml.
 THEME_CSS = """
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -622,10 +622,7 @@ fa  = pod    if global_am == "All" else pod[pod["am"] == global_am]
 v2f = v2p_all if global_am == "All" else v2p_all[v2p_all["am"] == global_am]
 
 # ── Tab navigation ────────────────────────────────────────────
-tabs = st.tabs([
-    "📊 Snapshot", "📁 Portfolio", "👥 Team", "🏥 Health",
-    "⚡ Actions", "🔍 Account Pulse", "📋 Tracker", "📈 Peak", "🏦 CP Health"
-])
+tabs = st.tabs(["Snapshot", "Portfolio", "Team", "Health", "Actions", "Account Pulse", "Tracker", "Peak", "CP Health"])
 
 # ══════════════════════════════════════════════════════════════
 # F · EXECUTIVE SNAPSHOT
