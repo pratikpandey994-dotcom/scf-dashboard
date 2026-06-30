@@ -29,16 +29,18 @@ def get_service():
         elif "type" in st.secrets and st.secrets["type"] == "service_account":
             creds_info = dict(st.secrets)
         else:
-            raise KeyError("No secrets")
-            
+            keys = list(st.secrets.keys())
+            raise ValueError(f"WARNING: No Google credentials found. st.secrets keys are: {keys}")         
         creds = Credentials.from_service_account_info(creds_info, scopes=SCOPES)
-    except Exception:
+    except Exception as e:
         # Fallback for local development
         key_path = r"C:\Users\PratikPandey\Downloads\robotic-haven-499821-d2-35b004d34efd.json"
         if os.path.exists(key_path):
             creds = Credentials.from_service_account_file(key_path, scopes=SCOPES)
         else:
-            raise ValueError("WARNING: No Google credentials found. Sync will fail.")
+            # If we reach here on cloud, append the secrets keys for debugging
+            keys = list(st.secrets.keys()) if hasattr(st, "secrets") else []
+            raise ValueError(f"No Google credentials found. st.secrets keys are: {keys}. Exception: {e}")
     return build('drive', 'v3', credentials=creds)
 
 @st.cache_data(ttl=86400) # Daily refresh for Drive files
