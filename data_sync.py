@@ -38,14 +38,12 @@ def get_service():
         if os.path.exists(key_path):
             creds = Credentials.from_service_account_file(key_path, scopes=SCOPES)
         else:
-            print("WARNING: No Google credentials found. Sync will fail.")
-            return None
+            raise ValueError("WARNING: No Google credentials found. Sync will fail.")
     return build('drive', 'v3', credentials=creds)
 
 @st.cache_data(ttl=86400) # Daily refresh for Drive files
-def sync_drive_data():
+def sync_drive_data_v2():
     service = get_service()
-    if not service: return False
     
     out_dir = os.path.join("static", "data")
     os.makedirs(out_dir, exist_ok=True)
@@ -60,9 +58,8 @@ def sync_drive_data():
     return time.time()
 
 @st.cache_data(ttl=43200) # Twice a day refresh for Google Sheets
-def sync_sheets_data():
+def sync_sheets_data_v2():
     service = get_service()
-    if not service: return False
     
     out_dir = os.path.join("static", "data")
     os.makedirs(out_dir, exist_ok=True)
@@ -115,5 +112,5 @@ def process_industry_csv(csv_path, out_dir):
         print(f"Error processing industry.csv: {e}")
 
 def run_syncs():
-    sync_drive_data()
-    sync_sheets_data()
+    sync_drive_data_v2()
+    sync_sheets_data_v2()
