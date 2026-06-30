@@ -1618,7 +1618,10 @@ window.addEventListener('DOMContentLoaded', async () => {
   for (const f of filesToLoad) {
     try {
       const resp = await fetch(f.url);
-      if (!resp.ok) continue;
+      if (!resp.ok) {
+        loadingMsg.innerHTML += `<p style="color:red">HTTP ${resp.status} fetching ${f.url}</p>`;
+        continue;
+      }
       const buf = await resp.arrayBuffer();
       const wb = XLSX.read(buf, {type:'array', cellDates:true});
       const ws = wb.Sheets[wb.SheetNames[0]];
@@ -1632,6 +1635,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         G[f.key] = data; loaded[f.key] = true;
       }
     } catch(e) {
+      loadingMsg.innerHTML += `<p style="color:red">Error parsing ${f.key}: ${e.message}</p>`;
       console.error("Failed to load", f.key, e);
     }
   }
