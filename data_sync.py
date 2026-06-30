@@ -66,8 +66,22 @@ def sync_drive_data_v2():
         print(f"Downloading {filename}...")
         request = service.files().get_media(fileId=file_id)
         content = request.execute()
-        with open(os.path.join(out_dir, filename), 'wb') as f:
+        file_path = os.path.join(out_dir, filename)
+        with open(file_path, 'wb') as f:
             f.write(content)
+        
+        # Convert Excel to JSON for lightning fast frontend loading
+        try:
+            print(f"Converting {filename} to JSON...")
+            df = pd.read_excel(file_path)
+            # Fill NaN with None so it translates to JSON null
+            df = df.where(pd.notnull(df), None)
+            json_path = os.path.join(out_dir, filename.replace('.xlsx', '.json'))
+            df.to_json(json_path, orient='records', date_format='iso')
+            print(f"Converted {filename} to JSON")
+        except Exception as e:
+            print(f"Failed to convert {filename} to JSON: {e}")
+            
         print(f"Synced {filename}")
     return time.time()
 
@@ -82,13 +96,26 @@ def sync_sheets_data_v2():
         print(f"Downloading {filename}...")
         request = service.files().export_media(fileId=file_id, mimeType='text/csv')
         content = request.execute()
-        with open(os.path.join(out_dir, filename), 'wb') as f:
+        file_path = os.path.join(out_dir, filename)
+        with open(file_path, 'wb') as f:
             f.write(content)
-        print(f"Synced {filename}")
+        
+        # Convert CSV to JSON for lightning fast frontend loading
+        if filename == 'reactlist.csv':
+            try:
+                print(f"Converting {filename} to JSON...")
+                df = pd.read_csv(file_path)
+                df = df.where(pd.notnull(df), None)
+                json_path = os.path.join(out_dir, filename.replace('.csv', '.json'))
+                df.to_json(json_path, orient='records', date_format='iso')
+                print(f"Converted {filename} to JSON")
+            except Exception as e:
+                print(f"Failed to convert {filename} to JSON: {e}")
         
         # Post-process industry.csv into a JSON map that dashboard.html can directly consume
         if filename == 'industry.csv':
-            process_industry_csv(os.path.join(out_dir, filename), out_dir)
+            process_industry_csv(file_path, out_dir)
+        print(f"Synced {filename}")
     return time.time()
 
 def process_industry_csv(csv_path, out_dir):

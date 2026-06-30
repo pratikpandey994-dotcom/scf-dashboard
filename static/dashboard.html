@@ -1609,10 +1609,10 @@ window.addEventListener('DOMContentLoaded', async () => {
   } catch(e) {}
 
   const filesToLoad = [
-    { key: 'master', url: 'data/master.xlsx' },
-    { key: 'v2', url: 'data/v2.xlsx' },
-    { key: 'obhist', url: 'data/obhist.xlsx' },
-    { key: 'reactlist', url: 'data/reactlist.csv' }
+    { key: 'master', url: 'data/master.json' },
+    { key: 'v2', url: 'data/v2.json' },
+    { key: 'obhist', url: 'data/obhist.json' },
+    { key: 'reactlist', url: 'data/reactlist.json' }
   ];
 
   for (const f of filesToLoad) {
@@ -1622,10 +1622,8 @@ window.addEventListener('DOMContentLoaded', async () => {
         loadingMsg.innerHTML += `<p style="color:red">HTTP ${resp.status} fetching ${f.url}</p>`;
         continue;
       }
-      const buf = await resp.arrayBuffer();
-      const wb = XLSX.read(buf, {type:'array', cellDates:true});
-      const ws = wb.Sheets[wb.SheetNames[0]];
-      const raw = XLSX.utils.sheet_to_json(ws, {defval:null});
+      
+      const raw = await resp.json();
       const data = adaptRows(f.key, raw);
       
       if (f.key === 'master') {
