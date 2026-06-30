@@ -38,6 +38,14 @@ st.markdown(
 
 DASHBOARD_PATH = os.path.join("static", "dashboard.html")
 
+# Auto-sync data from Google Drive and Sheets on startup/refresh
+try:
+    import data_sync
+    with st.spinner("Syncing latest data from Google Drive & Sheets..."):
+        data_sync.run_syncs()
+except Exception as e:
+    st.error(f"Failed to sync data: {e}")
+
 if not os.path.exists(DASHBOARD_PATH):
     st.error(
         "static/dashboard.html not found.\n\n"
