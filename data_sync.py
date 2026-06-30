@@ -30,7 +30,10 @@ def get_service():
             creds_info = dict(st.secrets)
         else:
             keys = list(st.secrets.keys())
-            raise ValueError(f"WARNING: No Google credentials found. st.secrets keys are: {keys}")         
+            raise ValueError(f"WARNING: No Google credentials found. st.secrets keys are: {keys}")
+            
+        if "private_key" in creds_info:
+            creds_info["private_key"] = creds_info["private_key"].replace('\\n', '\n')
         creds = Credentials.from_service_account_info(creds_info, scopes=SCOPES)
     except Exception as e:
         # Fallback for local development
