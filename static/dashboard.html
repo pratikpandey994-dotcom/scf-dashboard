@@ -593,7 +593,7 @@ body{background:var(--bg-base);color:var(--text-primary);font-family:var(--font-
           </div>
         </div>
       </div>
-      <div class="chart-card"><canvas id="chart-ovr" style="max-height:260px"></canvas></div>
+      <div class="chart-card" style="position: relative; height: 260px; width: 100%;"><canvas id="chart-ovr"></canvas></div>
     </div>
 
     <!-- Collections Tracker -->
@@ -737,7 +737,7 @@ body{background:var(--bg-base);color:var(--text-primary);font-family:var(--font-
           </div>
         </div>
       </div>
-      <div class="chart-card" style="margin-bottom:10px"><canvas id="chart-declining" style="max-height:260px"></canvas></div>
+      <div class="chart-card" style="margin-bottom:10px; position: relative; height: 260px; width: 100%;"><canvas id="chart-declining"></canvas></div>
       <div class="expand-card">
         <div class="expand-header" onclick="toggleExpand(this)">
           <div class="expand-header-left"><span class="expand-title">Declining Accounts Detail</span><span class="expand-badge red" id="decl-cnt">0</span></div>
@@ -1060,7 +1060,7 @@ body{background:var(--bg-base);color:var(--text-primary);font-family:var(--font-
       </div>
       <div class="chart-card">
         <div style="font-size:.68rem;color:var(--accent);margin-bottom:8px">💡 Click any point on the chart to set it as the peak date for analysis below</div>
-        <canvas id="chart-p-trend" style="max-height:300px"></canvas>
+        <div style="position: relative; height: 300px; width: 100%;"><canvas id="chart-p-trend"></canvas></div>
         <div class="trend-note" id="p-trend-note"></div>
       </div>
     </div>
@@ -1190,7 +1190,7 @@ body{background:var(--bg-base);color:var(--text-primary);font-family:var(--font-
         <span class="section-title">Account Contribution to Change</span>
         <span style="font-size:.68rem;color:var(--text-muted)">Red = declined · Green = grew · Top 15 by magnitude</span>
       </div>
-      <div class="chart-card"><canvas id="chart-p-waterfall" style="max-height:480px"></canvas></div>
+      <div class="chart-card" style="position: relative; height: 480px; width: 100%;"><canvas id="chart-p-waterfall"></canvas></div>
     </div>
 
     <!-- Detail Table -->
@@ -1255,15 +1255,15 @@ body{background:var(--bg-base);color:var(--text-primary);font-family:var(--font-
     </div>
     <div class="section">
       <div class="section-header"><span class="section-title">OB &amp; Utilization by Partner</span></div>
-      <div class="chart-card"><canvas id="chart-g-ob" style="max-height:320px"></canvas></div>
+      <div class="chart-card" style="position: relative; height: 320px; width: 100%;"><canvas id="chart-g-ob"></canvas></div>
     </div>
     <div class="section">
       <div class="section-header"><span class="section-title">Risk by Partner — Overdue + NPA Outstanding</span></div>
-      <div class="chart-card"><canvas id="chart-g-risk" style="max-height:280px"></canvas></div>
+      <div class="chart-card" style="position: relative; height: 280px; width: 100%;"><canvas id="chart-g-risk"></canvas></div>
     </div>
     <div class="section">
       <div class="section-header"><span class="section-title">Weighted IRR by Partner</span></div>
-      <div class="chart-card"><canvas id="chart-g-irr" style="max-height:280px"></canvas></div>
+      <div class="chart-card" style="position: relative; height: 280px; width: 100%;"><canvas id="chart-g-irr"></canvas></div>
     </div>
     <div class="section">
       <div class="section-header"><span class="section-title">Partner Health Scorecard</span><span style="font-size:.68rem;color:var(--text-muted)">Score /100 · Util 25 · Clean Book 25 · Recent Disb 30d 25 · Active 90d 25</span></div>
@@ -1711,7 +1711,7 @@ function toggleTheme() {
   try { renderViewP(); } catch(e) {}
 }
 const chartDefaults = () => { const c = chartChrome(); return {
-  responsive:true, maintainAspectRatio:true,
+  responsive:true, maintainAspectRatio:false,
   plugins:{ legend:{labels:{color:c.tick,font:{family:'IBM Plex Sans',size:11}}},
     tooltip:{backgroundColor:c.tipBg,titleColor:c.tipTitle,bodyColor:c.tipBody,borderColor:c.tipBorder,borderWidth:1} },
   scales:{ x:{ticks:{color:c.tick,font:{family:'IBM Plex Sans',size:11}},grid:{color:c.grid}},
