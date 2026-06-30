@@ -25,7 +25,7 @@ def get_service():
     # Attempt to load credentials from Streamlit Secrets or fallback to local path
     try:
         if "gcp_service_account" in st.secrets:
-            creds_info = st.secrets["gcp_service_account"]
+            creds_info = dict(st.secrets["gcp_service_account"])
             creds = Credentials.from_service_account_info(creds_info, scopes=SCOPES)
         else:
             raise KeyError("No secrets")
