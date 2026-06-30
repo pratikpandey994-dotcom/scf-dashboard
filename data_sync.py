@@ -33,7 +33,15 @@ def get_service():
             raise ValueError(f"WARNING: No Google credentials found. st.secrets keys are: {keys}")
             
         if "private_key" in creds_info:
-            creds_info["private_key"] = creds_info["private_key"].replace('\\n', '\n')
+            pk = creds_info["private_key"]
+            pk = pk.replace('\\n', '\n')
+            if '\n' not in pk and ' ' in pk:
+                pk = pk.replace('-----BEGIN PRIVATE KEY-----', '-----BEGIN PRIVATE KEY-----\n')
+                pk = pk.replace('-----END PRIVATE KEY-----', '\n-----END PRIVATE KEY-----')
+                pk = pk.replace(' ', '\n')
+                pk = pk.replace('-----BEGIN\nPRIVATE\nKEY-----', '-----BEGIN PRIVATE KEY-----')
+                pk = pk.replace('-----END\nPRIVATE\nKEY-----', '-----END PRIVATE KEY-----')
+            creds_info["private_key"] = pk
         creds = Credentials.from_service_account_info(creds_info, scopes=SCOPES)
     except Exception as e:
         # Fallback for local development
