@@ -1496,10 +1496,6 @@ function adaptRows(key, rows) {
         Owner: r['AM'] ? (r['POD_MANAGER'] || r['POD'] || r['OWNER'] || 'Unassigned') : 'Unassigned',
         Pod: r['AM'] ? (r['POD_MANAGER'] || r['POD'] || 'Unassigned') : 'Unassigned'
       };
-    }).filter(r => {
-       const co = (r.company || '').toLowerCase();
-       if (co.includes('new wincup holdings') || co.includes('wincup')) return false;
-       return true;
     });
   }
 
