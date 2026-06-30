@@ -46,13 +46,6 @@ try:
 except Exception as e:
     st.error(f"Failed to sync data: {e}")
 
-st.write("Debug: files in static/data/")
-try:
-    for f in os.listdir("static/data"):
-        size = os.path.getsize(os.path.join("static", "data", f))
-        st.write(f"- {f} ({size} bytes)")
-except Exception as e:
-    st.write(f"Could not list directory: {e}")
 
 if not os.path.exists(DASHBOARD_PATH):
     st.error(
