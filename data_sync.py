@@ -26,9 +26,12 @@ def get_service():
     try:
         if "gcp_service_account" in st.secrets:
             creds_info = dict(st.secrets["gcp_service_account"])
-            creds = Credentials.from_service_account_info(creds_info, scopes=SCOPES)
+        elif "type" in st.secrets and st.secrets["type"] == "service_account":
+            creds_info = dict(st.secrets)
         else:
             raise KeyError("No secrets")
+            
+        creds = Credentials.from_service_account_info(creds_info, scopes=SCOPES)
     except Exception:
         # Fallback for local development
         key_path = r"C:\Users\PratikPandey\Downloads\robotic-haven-499821-d2-35b004d34efd.json"
