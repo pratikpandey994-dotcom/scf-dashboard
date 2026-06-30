@@ -313,7 +313,7 @@ body{background:var(--bg-base);color:var(--text-primary);font-family:var(--font-
     <h1>CP POD · <span>SCF PORTFOLIO</span></h1>
     <p>Upload weekly files to load the dashboard</p>
   </div>
-  <div class="upload-grid">
+  <div class="upload-grid" style="display:none">
     <div class="upload-zone" id="zone-master"><input type="file" accept=".xlsx,.xls" onchange="handleUpload('master',this)">
       <div class="uz-icon">📋</div><div class="uz-label">Account Master</div>
       <div class="uz-desc">Weekly · accounts + classification, facility, OB, AM, WA/NWA</div><div class="uz-status" id="status-master">Not loaded</div></div>
@@ -1607,7 +1607,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     { key: 'v2', url: 'data/v2.json' },
     { key: 'obhist', url: 'data/obhist.json' },
     { key: 'reactlist', url: 'data/reactlist.json' },
-    { key: 'refresh', url: 'data/refresh.json' }
+    { key: 'refresh', url: 'data/refresh.json' },
+    { key: 'obcurr', url: 'data/obcurr.json' }
   ];
 
   for (const f of filesToLoad) {

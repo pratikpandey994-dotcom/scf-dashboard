@@ -41,6 +41,14 @@ DASHBOARD_PATH = os.path.join("static", "dashboard.html")
 # Auto-sync data from Google Drive and Sheets on startup/refresh
 try:
     import data_sync
+    
+    # Add a button to let the user manually force a background re-sync
+    col1, col2, col3 = st.columns([1, 8, 1])
+    with col1:
+        if st.button("🔄 Force Data Sync", use_container_width=True):
+            st.cache_data.clear()
+            st.rerun()
+
     with st.spinner("Syncing latest data from Google Drive & Sheets..."):
         data_sync.run_syncs()
 except Exception as e:

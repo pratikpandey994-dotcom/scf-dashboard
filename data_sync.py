@@ -10,12 +10,7 @@ import time
 SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
 
 # File IDs determined from the user's provided sheets and drive files
-DRIVE_FILES = {
-    'master.xlsx': '1tedCS9rJZhEw4Bl9Nk_3xNsvppGkTfCZ',
-    'v2.xlsx': '1XlrwlBwJS3lhMvyI_2VGSdjKEf4PukTy',
-    'obhist.xlsx': '1SQnvRmL7lmhWXEttRW9XUW-DcApVGh7I',
-    'refresh.xlsx': '1FG6gqXo3ypGTyIormagwZonbfu_h3yGF'
-}
+DRIVE_FOLDER_ID = '1ZjiUf4xdjrdiRqoXYxUEYjhR0eJ2mPj6'
 
 SHEET_FILES = {
     'reactlist.csv': '1SIwm7hUghfG4Mz0pTPhH0CaWkOd-P2XZ2vL6uQYslDQ',
@@ -63,8 +58,39 @@ def sync_drive_data_v2():
     out_dir = os.path.join("static", "data")
     os.makedirs(out_dir, exist_ok=True)
     
-    for filename, file_id in DRIVE_FILES.items():
-        print(f"Downloading {filename}...")
+    print(f"Fetching files from Drive folder {DRIVE_FOLDER_ID}...")
+    results = service.files().list(
+        q=f"'{DRIVE_FOLDER_ID}' in parents and trashed=false",
+        pageSize=50, fields="nextPageToken, files(id, name, mimeType)"
+    ).execute()
+    
+    items = results.get('files', [])
+    if not items:
+        print("No files found in the Drive folder.")
+        return time.time()
+        
+    for item in items:
+        file_id = item['id']
+        raw_name = item['name'].lower()
+        
+        # Determine the target filename based on keywords in the Google Drive filename
+        filename = None
+        if 'master' in raw_name:
+            filename = 'master.xlsx'
+        elif 'invoice' in raw_name:
+            filename = 'v2.xlsx'
+        elif 'historic' in raw_name:
+            filename = 'obhist.xlsx'
+        elif 'refresh' in raw_name:
+            filename = 'refresh.xlsx'
+        elif 'daily' in raw_name:
+            filename = 'obcurr.xlsx'
+            
+        if not filename:
+            print(f"Skipping unrecognized file: {item['name']}")
+            continue
+            
+        print(f"Downloading {item['name']} as {filename}...")
         request = service.files().get_media(fileId=file_id)
         content = request.execute()
         file_path = os.path.join(out_dir, filename)
