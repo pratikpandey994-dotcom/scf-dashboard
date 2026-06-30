@@ -51,7 +51,8 @@ def get_service():
         else:
             # If we reach here on cloud, append the secrets keys for debugging
             keys = list(st.secrets.keys()) if hasattr(st, "secrets") else []
-            raise ValueError(f"No Google credentials found. st.secrets keys are: {keys}. Exception: {e}")
+            pk_repr = repr(creds_info.get("private_key", ""))[:100] + "..." if 'creds_info' in locals() else ""
+            raise ValueError(f"No Google credentials found. st.secrets keys are: {keys}. Exception: {e}. PK repr: {pk_repr}")
     return build('drive', 'v3', credentials=creds)
 
 @st.cache_data(ttl=86400) # Daily refresh for Drive files
