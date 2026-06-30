@@ -313,26 +313,23 @@ body{background:var(--bg-base);color:var(--text-primary);font-family:var(--font-
     <h1>CP POD · <span>SCF PORTFOLIO</span></h1>
     <p>Upload weekly files to load the dashboard</p>
   </div>
-  <div class="upload-grid" style="display:none">
-    <div class="upload-zone" id="zone-master"><input type="file" accept=".xlsx,.xls" onchange="handleUpload('master',this)">
-      <div class="uz-icon">📋</div><div class="uz-label">Account Master</div>
-      <div class="uz-desc">Weekly · accounts + classification, facility, OB, AM, WA/NWA</div><div class="uz-status" id="status-master">Not loaded</div></div>
-    <div class="upload-zone" id="zone-v2"><input type="file" accept=".xlsx,.xls" onchange="handleUpload('v2',this)">
-      <div class="uz-icon">🧾</div><div class="uz-label">Invoice Data</div>
-      <div class="uz-desc">Weekly · stages, DPD, origination, settlement</div><div class="uz-status" id="status-v2">Not loaded</div></div>
-    <div class="upload-zone" id="zone-obcurr"><input type="file" accept=".xlsx,.xls" onchange="handleUpload('obcurr',this)">
-      <div class="uz-icon">📈</div><div class="uz-label">Daily OB</div>
-      <div class="uz-desc">Weekly · from 1 May 2026 onward (merges onto history)</div><div class="uz-status" id="status-obcurr">Not loaded</div></div>
-    <div class="upload-zone" id="zone-obhist"><input type="file" accept=".xlsx,.xls" onchange="handleUpload('obhist',this)">
-      <div class="uz-icon">🗄️</div><div class="uz-label">Historical OB</div>
-      <div class="uz-desc">Cached · 2016 – Apr 2026 · seed once, then leave</div><div class="uz-status" id="status-obhist">Not loaded</div></div>
-    <div class="upload-zone" id="zone-reactlist"><input type="file" accept=".xlsx,.xls" onchange="handleUpload('reactlist',this)">
-      <div class="uz-icon">🔄</div><div class="uz-label">Reactivation List</div>
-      <div class="uz-desc">Cached · Account assignments for reactivation</div><div class="uz-status" id="status-reactlist">Not loaded</div></div>
-    <div class="upload-zone" id="zone-refresh"><input type="file" accept=".xlsx,.xls" onchange="handleUpload('refresh',this)">
-      <div class="uz-icon">📄</div><div class="uz-label">Data Refresh List</div>
-      <div class="uz-desc">Cached · Pending financial / bank / ITR docs</div><div class="uz-status" id="status-refresh">Not loaded</div></div>
+  <div class="upload-grid" style="grid-template-columns: 1fr;">
+    <div class="upload-zone" onclick="forceSync()" style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-height: 150px; background: rgba(59, 130, 246, 0.1); border-color: var(--accent);">
+      <div class="uz-icon" style="font-size: 2rem; color: var(--accent);">🔄</div>
+      <div class="uz-label" style="font-size: 1.2rem; margin-top: 10px;">Force Data Sync</div>
+      <div class="uz-desc" style="font-size: 0.9rem; margin-top: 5px;">Pull latest data directly from Google Drive & Sheets</div>
+    </div>
   </div>
+
+  <script>
+    function forceSync() {
+      try {
+        window.parent.location.href = window.parent.location.pathname + "?force_sync=1";
+      } catch (e) {
+        alert("Sync triggered. Please manually refresh the page after a few seconds.");
+      }
+    }
+  </script>
   <div class="upload-bottom">
     <div class="date-row"><label>Today (D.today)</label><input type="date" id="today-input"></div>
     <button id="launch-btn" disabled onclick="launchDashboard()">LAUNCH DASHBOARD →</button>

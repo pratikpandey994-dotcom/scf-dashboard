@@ -42,12 +42,11 @@ DASHBOARD_PATH = os.path.join("static", "dashboard.html")
 try:
     import data_sync
     
-    # Add a button to let the user manually force a background re-sync
-    col1, col2, col3 = st.columns([1, 8, 1])
-    with col1:
-        if st.button("🔄 Force Data Sync", use_container_width=True):
-            st.cache_data.clear()
-            st.rerun()
+    # Check if dashboard.html requested a force sync via query params
+    if st.query_params.get("force_sync") == "1":
+        st.cache_data.clear()
+        st.query_params.clear()
+        st.rerun()
 
     with st.spinner("Syncing latest data from Google Drive & Sheets..."):
         data_sync.run_syncs()
