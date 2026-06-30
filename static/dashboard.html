@@ -1499,8 +1499,6 @@ function adaptRows(key, rows) {
     }).filter(r => {
        const co = (r.company || '').toLowerCase();
        if (co.includes('new wincup holdings') || co.includes('wincup')) return false;
-       const ow = (r.Owner || '').toLowerCase();
-       if (ow === 'unassigned' || ow === '') return false;
        return true;
     });
   }
