@@ -51,15 +51,12 @@ def sync_drive_data():
     os.makedirs(out_dir, exist_ok=True)
     
     for filename, file_id in DRIVE_FILES.items():
-        try:
-            print(f"Downloading {filename}...")
-            request = service.files().get_media(fileId=file_id)
-            content = request.execute()
-            with open(os.path.join(out_dir, filename), 'wb') as f:
-                f.write(content)
-            print(f"Synced {filename}")
-        except Exception as e:
-            print(f"Error syncing {filename}: {e}")
+        print(f"Downloading {filename}...")
+        request = service.files().get_media(fileId=file_id)
+        content = request.execute()
+        with open(os.path.join(out_dir, filename), 'wb') as f:
+            f.write(content)
+        print(f"Synced {filename}")
     return time.time()
 
 @st.cache_data(ttl=43200) # Twice a day refresh for Google Sheets
@@ -71,20 +68,16 @@ def sync_sheets_data():
     os.makedirs(out_dir, exist_ok=True)
     
     for filename, file_id in SHEET_FILES.items():
-        try:
-            print(f"Downloading {filename}...")
-            request = service.files().export_media(fileId=file_id, mimeType='text/csv')
-            content = request.execute()
-            with open(os.path.join(out_dir, filename), 'wb') as f:
-                f.write(content)
-            print(f"Synced {filename}")
-            
-            # Post-process industry.csv into a JSON map that dashboard.html can directly consume
-            if filename == 'industry.csv':
-                process_industry_csv(os.path.join(out_dir, filename), out_dir)
-                
-        except Exception as e:
-            print(f"Error syncing {filename}: {e}")
+        print(f"Downloading {filename}...")
+        request = service.files().export_media(fileId=file_id, mimeType='text/csv')
+        content = request.execute()
+        with open(os.path.join(out_dir, filename), 'wb') as f:
+            f.write(content)
+        print(f"Synced {filename}")
+        
+        # Post-process industry.csv into a JSON map that dashboard.html can directly consume
+        if filename == 'industry.csv':
+            process_industry_csv(os.path.join(out_dir, filename), out_dir)
     return time.time()
 
 def process_industry_csv(csv_path, out_dir):
