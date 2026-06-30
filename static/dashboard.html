@@ -1493,8 +1493,8 @@ function adaptRows(key, rows) {
         AM_Name: r['AM'], AM: r['AM'], BDM: r['BDM'],
         Pod_Manager: r['POD_MANAGER'],
         Type: r['TYPE'], Team: team, Partner: r['CP_COMPANY'],
-        Owner: r['POD'] || r['OWNER'] || 'Unassigned',
-        Pod: r['POD'] || 'Unassigned'
+        Owner: r['POD_MANAGER'] || r['POD'] || r['OWNER'] || 'Unassigned',
+        Pod: r['POD_MANAGER'] || r['POD'] || 'Unassigned'
       };
     }).filter(r => {
        const co = (r.company || '').toLowerCase();
