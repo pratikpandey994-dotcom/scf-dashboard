@@ -1,14 +1,11 @@
-[theme]
-base            = "light"
-primaryColor    = "#0d9488"
-backgroundColor = "#f9fafb"
-secondaryBackgroundColor = "#ffffff"
-textColor       = "#1f2937"
-font            = "sans serif"
-
 [server]
-maxUploadSize = 500
-headless = true
+# Required: lets Streamlit serve files from static/ at /app/static/,
+# giving the embedded dashboard a real origin so IndexedDB/localStorage work.
+enableStaticServing = true
 
-[browser]
-gatherUsageStats = false
+[theme]
+base = "dark"
+backgroundColor = "#1a1a2e"
+secondaryBackgroundColor = "#16213e"
+primaryColor = "#f59e0b"
+textColor = "#f1f5f9"
