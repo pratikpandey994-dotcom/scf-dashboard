@@ -1602,13 +1602,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (ir.ok) INDUSTRY_MAP = await ir.json();
   } catch(e) {}
 
+  const cb = '?t=' + new Date().getTime();
   const filesToLoad = [
-    { key: 'master', url: 'data/master.json' },
-    { key: 'v2', url: 'data/v2.json' },
-    { key: 'obhist', url: 'data/obhist.json' },
-    { key: 'reactlist', url: 'data/reactlist.json' },
-    { key: 'refresh', url: 'data/refresh.json' },
-    { key: 'obcurr', url: 'data/obcurr.json' }
+    { key: 'master', url: 'data/master.json' + cb },
+    { key: 'v2', url: 'data/v2.json' + cb },
+    { key: 'obhist', url: 'data/obhist.json' + cb },
+    { key: 'reactlist', url: 'data/reactlist.json' + cb },
+    { key: 'refresh', url: 'data/refresh.json' + cb },
+    { key: 'obcurr', url: 'data/obcurr.json' + cb }
   ];
 
   for (const f of filesToLoad) {
