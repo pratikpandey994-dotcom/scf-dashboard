@@ -1596,31 +1596,50 @@ window.addEventListener('DOMContentLoaded', async () => {
   try { applyTheme(localStorage.getItem('scf_theme')==='light' ? 'light' : 'dark'); } catch(e) { applyTheme('dark'); }
   const t = new Date(); document.getElementById('today-input').value = t.toISOString().split('T')[0];
 
-  // Restore small files from localStorage
-  for (const key of SMALL_FILES) {
+  // Auto load data from backend sync
+  document.querySelector('.upload-grid').style.display = 'none';
+  document.querySelector('.upload-bottom').style.display = 'none';
+  const loadingMsg = document.createElement('div');
+  loadingMsg.innerHTML = '<h2 style="color:var(--text);text-align:center;margin-top:40px;">Syncing latest data from Google Drive & Sheets...</h2>';
+  document.getElementById('upload-screen').appendChild(loadingMsg);
+  
+  try {
+    const ir = await fetch('data/industry.json');
+    if (ir.ok) INDUSTRY_MAP = await ir.json();
+  } catch(e) {}
+
+  const filesToLoad = [
+    { key: 'master', url: 'data/master.xlsx' },
+    { key: 'v2', url: 'data/v2.xlsx' },
+    { key: 'obhist', url: 'data/obhist.xlsx' },
+    { key: 'reactlist', url: 'data/reactlist.csv' }
+  ];
+
+  for (const f of filesToLoad) {
     try {
-      const c = localStorage.getItem('scf_'+key);
-      if (c) {
-        G[key] = JSON.parse(c);
-        loaded[key] = true;
-        updateUploadUI(key, G[key].length, 'cache');
-        checkLaunch();
+      const resp = await fetch(f.url);
+      if (!resp.ok) continue;
+      const buf = await resp.arrayBuffer();
+      const wb = XLSX.read(buf, {type:'array', cellDates:true});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const raw = XLSX.utils.sheet_to_json(ws, {defval:null});
+      const data = adaptRows(f.key, raw);
+      
+      if (f.key === 'master') {
+        G.master = data; G.v1 = data; G.mh = data;
+        loaded.master = true; loaded.v1 = true; loaded.mh = true;
+      } else {
+        G[f.key] = data; loaded[f.key] = true;
       }
-    } catch(e) {}
+    } catch(e) {
+      console.error("Failed to load", f.key, e);
+    }
   }
 
-  // Restore large files from IndexedDB
-  for (const key of LARGE_FILES) {
-    try {
-      const data = await idbGet('scf_'+key);
-      if (data && data.length) {
-        G[key] = data;
-        loaded[key] = true;
-        if (key === 'master') { G.v1 = data; G.mh = data; loaded.v1 = true; loaded.mh = true; }
-        updateUploadUI(key, data.length, 'cache');
-        checkLaunch();
-      }
-    } catch(e) { console.warn('IDB restore failed for', key, e); }
+  if (loaded.master && loaded.v2 && loaded.obhist) {
+    launchDashboard();
+  } else {
+    loadingMsg.innerHTML = '<h2 style="color:#e94560;text-align:center;margin-top:40px;">Failed to sync complete data. Please ensure credentials and file paths are correct.</h2>';
   }
 });
 
