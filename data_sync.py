@@ -52,7 +52,7 @@ def get_service():
     return build('drive', 'v3', credentials=creds)
 
 @st.cache_data(ttl=86400) # Daily refresh for Drive files
-def sync_drive_data_v2():
+def sync_drive_data_v3():
     service = get_service()
     
     out_dir = os.path.join("static", "data")
@@ -180,5 +180,5 @@ def process_industry_csv(csv_path, out_dir):
         print(f"Error processing industry.csv: {e}")
 
 def run_syncs():
-    sync_drive_data_v2()
+    sync_drive_data_v3()
     sync_sheets_data_v2()
