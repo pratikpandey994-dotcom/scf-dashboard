@@ -62,6 +62,7 @@ if not os.path.exists(DASHBOARD_PATH):
     )
     st.stop()
 
+import time
 # Served via Streamlit static serving (enableStaticServing = true in config.toml).
 # Files in static/ are exposed at the /app/static/ URL path, giving the iframe a
 # real origin so IndexedDB / localStorage work.
@@ -70,4 +71,4 @@ if not os.path.exists(DASHBOARD_PATH):
 # plus scrolling=True is the simplest reliable approach. Tune to taste.
 IFRAME_HEIGHT = 2600
 
-components.iframe("app/static/dashboard.html", height=IFRAME_HEIGHT, scrolling=True)
+components.iframe(f"app/static/dashboard.html?t={int(time.time())}", height=IFRAME_HEIGHT, scrolling=True)
