@@ -2472,11 +2472,24 @@ function setCollWin(win,btn) {
 
 function renderCollections() {
   const am=G.collAM, today=G.today;
-  const monthStart=new Date(today.getFullYear(),today.getMonth(),1);
   let invs=filteredV2Pod();
   if (am!=='all') invs=invs.filter(i=>i.am===am);
 
-  // Received: settled, settlement_date in current month
+  let maxSettleDate = 0;
+  for (const i of invs) {
+    if (SETTLED.has(i.stage) && i.settled && i.settled.getTime() <= today.getTime() && i.settled.getTime() > maxSettleDate) {
+      maxSettleDate = i.settled.getTime();
+    }
+  }
+  let monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  if (maxSettleDate > 0) {
+    const maxD = new Date(maxSettleDate);
+    if (maxD.getFullYear() < today.getFullYear() || (maxD.getFullYear() === today.getFullYear() && maxD.getMonth() < today.getMonth())) {
+      monthStart = new Date(maxD.getFullYear(), maxD.getMonth(), 1);
+    }
+  }
+
+  // Received: settled, settlement_date in target month
   const recv = invs.filter(i=>SETTLED.has(i.stage)&&i.settled&&inWin(i.settled,monthStart,today))
     .reduce((s,i)=>s+Math.max(0,i.origination-i.outstanding),0);
 
