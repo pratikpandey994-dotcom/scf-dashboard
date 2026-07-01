@@ -345,7 +345,7 @@ body{background:var(--bg-base);color:var(--text-primary);font-family:var(--font-
     <div class="flex-row" style="gap:10px">
       <div class="brand-name"><span id="brand-pod">ALL PODS</span> · <span>SCF</span></div>
       <div class="date-pill" id="header-date">—</div>
-      <div class="date-pill" style="background:rgba(148,163,184,.12);border-color:rgba(148,163,184,.3);color:var(--text-secondary)">v3_49</div>
+      <div class="date-pill" style="display:none; background:rgba(148,163,184,.12);border-color:rgba(148,163,184,.3);color:var(--text-secondary)">v3_49</div>
     </div>
     <nav class="header-nav">
       <button class="nav-btn active" onclick="showView('f')">F · Snapshot</button>
@@ -520,7 +520,7 @@ body{background:var(--bg-base);color:var(--text-primary);font-family:var(--font-
       </div>
 
     </div>
-    <div class="section">
+    <div class="section" style="display:none">
       <div class="section-header"><span class="section-title">Account Health</span></div>
       <div class="card-grid cols-6" id="f-account-health"></div>
     </div>
@@ -1262,7 +1262,7 @@ body{background:var(--bg-base);color:var(--text-primary);font-family:var(--font-
       <div class="section-header"><span class="section-title">Weighted IRR by Partner</span></div>
       <div class="chart-card" style="position: relative; height: 280px; width: 100%;"><canvas id="chart-g-irr"></canvas></div>
     </div>
-    <div class="section">
+    <div class="section" style="display:none">
       <div class="section-header"><span class="section-title">Partner Health Scorecard</span><span style="font-size:.68rem;color:var(--text-muted)">Score /100 · Util 25 · Clean Book 25 · Recent Disb 30d 25 · Active 90d 25</span></div>
       <div id="g-partner-table"></div>
     </div>
