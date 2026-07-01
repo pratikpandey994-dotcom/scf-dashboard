@@ -1987,6 +1987,15 @@ function applyPod(pod) {
 // ════════════════════════════════════════════════════
 function setGlobalAM(am, btn) {
   G.globalAM = am;
+  // Automatically sync the Collections Tracker AM filter to match so the user isn't confused
+  G.collAM = am;
+  const collChips = document.getElementById('coll-am-chips');
+  if (collChips) {
+    collChips.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+    const target = collChips.querySelector(`.chip[data-am="${am.replace(/'/g,"\\'")}"]`);
+    if (target) target.classList.add('active');
+  }
+
   // Scope the active highlight to the AM bar so the pod button keeps its state
   document.querySelectorAll('#global-am-filter .gam-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
